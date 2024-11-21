@@ -1,4 +1,4 @@
-package com.supcoder.apksigner.ui
+package com.supcoder.apksigner.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutLinearInEasing

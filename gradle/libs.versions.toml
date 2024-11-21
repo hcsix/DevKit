@@ -17,6 +17,8 @@ coroutines = "1.9.0"
 filekit = "0.8.7"
 multiplatform-settings = "1.2.0"
 kotlinx-serialization-json = "1.7.3"
+#moshi = "1.15.1"
+gson = "2.10.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,6 +46,10 @@ multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", vers
 multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
 multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatform-settings" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+
+gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
+#moshi = {module = "com.squareup.moshi:moshi", version.ref = "moshi"}
+#moshi-kotlin = {module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi"}
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

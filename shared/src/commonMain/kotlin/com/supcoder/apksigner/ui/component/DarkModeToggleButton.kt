@@ -93,7 +93,7 @@ fun DarkModeToggleButton(viewModel: MainViewModel) {
                 else -> Icons.Outlined.LightMode
             },
             contentDescription = if (isDarkMode) "Dark Mode" else "Light Mode",
-            modifier = Modifier.size(24.dp).scale(1.2f) // 放大图标
+            modifier = Modifier.size(24.dp).scale(1.35f) // 放大图标
                  .offset(y = iconOffset.value.dp)
         )
     }

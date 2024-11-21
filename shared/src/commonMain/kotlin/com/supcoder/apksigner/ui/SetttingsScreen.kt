@@ -37,8 +37,9 @@ import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.model.DarkThemeConfig
 import com.supcoder.apksigner.model.DestStoreSize
 import com.supcoder.apksigner.model.DestStoreType
+import com.supcoder.apksigner.ui.component.FolderInput
+import com.supcoder.apksigner.ui.component.StringInput
 import com.supcoder.apksigner.vm.MainViewModel
-import java.awt.Desktop
 import java.io.File
 
 /**
@@ -48,7 +49,7 @@ import java.io.File
  * @Version     : 1.0
  */
 @Composable
-fun SetUp(viewModel: MainViewModel) {
+fun SettingsScreen(viewModel: MainViewModel) {
     Box(modifier = Modifier.padding(top = 20.dp, bottom = 20.dp, end = 14.dp)) {
         LazyColumn {
             item {

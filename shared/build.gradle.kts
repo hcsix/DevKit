@@ -44,6 +44,10 @@ kotlin {
                 implementation(libs.multiplatform.settings.coroutines)
                 implementation(libs.multiplatform.settings.serialization)
                 implementation(libs.kotlinx.serialization.json)
+//                implementation(libs.moshi)
+//                implementation(libs.moshi.kotlin)
+                implementation(libs.gson)
+
             }
         }
         jvmMain {

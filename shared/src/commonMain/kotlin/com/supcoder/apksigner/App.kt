@@ -40,8 +40,9 @@ import com.supcoder.apksigner.platform.createFlowSettings
 import com.supcoder.apksigner.router.Page
 import com.supcoder.apksigner.theme.AppTheme
 import com.supcoder.apksigner.ui.HomeScreen
+import com.supcoder.apksigner.ui.JsonScreen
 import com.supcoder.apksigner.ui.LanguageScreen
-import com.supcoder.apksigner.ui.SetUp
+import com.supcoder.apksigner.ui.SettingsScreen
 import com.supcoder.apksigner.ui.component.DarkModeToggleButton
 import com.supcoder.apksigner.vm.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -144,11 +145,12 @@ fun MainContentScreen(viewModel: MainViewModel) {
                 val content: @Composable (Page) -> Unit = { page ->
                     when (page) {
                         Page.SIGNATURE_INFORMATION -> HomeScreen { }
+                        Page.JSON_FORMAT -> JsonScreen(viewModel)
                         Page.APK_INFORMATION -> LanguageScreen { }
 //                        Page.APK_SIGNATURE -> ApkSignature(viewModel)
 //                        Page.SIGNATURE_GENERATION -> SignatureGeneration(viewModel)
-                        Page.SET_UP -> SetUp(viewModel)
-                        else -> SetUp(viewModel)
+                        Page.SETTINGS -> SettingsScreen(viewModel)
+                        else -> SettingsScreen(viewModel)
                     }
                 }
                 // 淡入淡出切换页面
