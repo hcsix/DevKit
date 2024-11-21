@@ -25,6 +25,9 @@ class JsonViewModel @OptIn(ExperimentalSettingsApi::class) constructor() : ViewM
     private var _formattedJson = mutableStateOf("")
     val formattedJson by _formattedJson
 
+    private var _singlePanelJson = mutableStateOf("")
+    val singlePanelJson by _singlePanelJson
+
 
     fun updateFormatJson(json: String) {
         _formattedJson.update {
@@ -38,19 +41,36 @@ class JsonViewModel @OptIn(ExperimentalSettingsApi::class) constructor() : ViewM
         }
     }
 
-    fun convertJson(isExpand: Boolean) {
-        val json = try {
-            System.out.printf("rawJson = $rawJson")
-            val jsonObject = JsonParser.parseString(rawJson)
-            gson.toJson(jsonObject)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            "无效的 JSON"
+    fun updateSinglePanelJson(json: String) {
+        _singlePanelJson.update {
+            json
         }
-        if (isExpand){
-            updateFormatJson(json)
-        } else{
-            updateRawJson(json)
+    }
+
+
+    fun convertJson(isExpand: Boolean) {
+        if (isExpand) {
+            try {
+                System.out.printf("rawJson = $rawJson")
+                val jsonObject = JsonParser.parseString(rawJson)
+                gson.toJson(jsonObject)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "无效的 JSON"
+            }.apply {
+                updateFormatJson(this)
+            }
+        } else {
+            try {
+                System.out.printf("rawJson = $singlePanelJson")
+                val jsonObject = JsonParser.parseString(singlePanelJson)
+                gson.toJson(jsonObject)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "无效的 JSON"
+            }.apply {
+                updateSinglePanelJson(this)
+            }
         }
     }
 

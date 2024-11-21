@@ -104,8 +104,8 @@ fun JsonFormatSinglePanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewM
                 .padding(start = 8.dp)
         ) {
             TextField(
-                value = jsonViewModel.rawJson,
-                onValueChange = { jsonViewModel.updateRawJson(it) },
+                value = jsonViewModel.singlePanelJson,
+                onValueChange = { jsonViewModel.updateSinglePanelJson(it) },
                 label = { Text("JSON 内容") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,7 +122,7 @@ fun JsonFormatSinglePanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewM
                     .width(24.dp)
                     .clip(CircleShape).align(Alignment.TopEnd)
                     .clickable(onClick = { // 复制格式化后的 JSON 到剪贴板
-                        copy(jsonViewModel.rawJson, mainViewModel)
+                        copy(jsonViewModel.singlePanelJson, mainViewModel)
                     })
             ) {
                 Icon(
