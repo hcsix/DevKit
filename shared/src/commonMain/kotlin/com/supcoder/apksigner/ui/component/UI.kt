@@ -300,7 +300,7 @@ fun UploadAnimate(dragging: Boolean, scope: CoroutineScope) {
                 containerColor = MaterialTheme.colorScheme.background,
             )
         ) {
-            LottieAnimation(scope, "files/upload.json")
+//            LottieAnimation(scope, "files/upload.json")
         }
     }
 }
@@ -325,11 +325,11 @@ fun LoadingAnimate(visible: Boolean, viewModel: MainViewModel, scope: CoroutineS
                 DarkThemeConfig.DARK -> true
                 DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
             }
-            if (useDarkTheme) {
-                LottieAnimation(scope, "files/lottie_loading_light.json")
-            } else {
-                LottieAnimation(scope, "files/lottie_loading_dark.json")
-            }
+//            if (useDarkTheme) {
+//                LottieAnimation(scope, "files/lottie_loading_light.json")
+//            } else {
+//                LottieAnimation(scope, "files/lottie_loading_dark.json")
+//            }
         }
     }
 }

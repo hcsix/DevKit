@@ -17,11 +17,13 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -39,7 +41,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 @Preview
-fun DarkModeToggleButton(viewModel: MainViewModel) {
+fun DarkModeToggleButton(viewModel: MainViewModel, isCollapsed: MutableState<Boolean>) {
     val themeConfig by viewModel.themeConfig.collectAsState()
     val isDarkMode = when (themeConfig) {
         DarkThemeConfig.LIGHT -> false
@@ -57,32 +59,37 @@ fun DarkModeToggleButton(viewModel: MainViewModel) {
     val isSwitching = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
+    val buttonSize = if (isCollapsed.value) 24.dp else 48.dp
+    val iconSize = if (isCollapsed.value) 12.dp else 24.dp
+    val iconOffsetTarget = if (isCollapsed.value) 24f else 48f
+    val verticalPadding = if (isCollapsed.value) 16.dp else 8.dp
+
     Box(modifier = Modifier
-        .padding(0.dp, 8.dp)
-        .height(48.dp)
-        .width(48.dp)
+        .padding(0.dp, verticalPadding)
+        .height(buttonSize)
+        .width(buttonSize)
         .clip(CircleShape)
         .border(1.dp, Color.Gray, CircleShape)
         .background(Color.Gray.copy(alpha = backgroundColor))
         .clickable(interactionSource = interactionSource, indication = null) {
             isSwitching.value = true
             coroutineScope.launch {
-                val targetOffset = if (!isDarkMode) -48f else 48f
+                val targetOffset = if (!isDarkMode) -iconOffsetTarget else iconOffsetTarget
 //                iconOffset.snapTo(targetOffset)
                 iconOffset.animateTo(
                     targetValue = targetOffset,
-                    animationSpec = tween(durationMillis = 300)
+                    animationSpec = tween(durationMillis = 200)
                 )
                 viewModel.toggleDarkMode(!isDarkMode)
-                iconOffset.snapTo(if (!isDarkMode) 48f else -48f)
+                iconOffset.snapTo(if (!isDarkMode) iconOffsetTarget else -iconOffsetTarget)
                 iconOffset.animateTo(
                     targetValue = 0f,
-                    animationSpec = tween(durationMillis = 300)
+                    animationSpec = tween(durationMillis = 200)
                 )
                 isSwitching.value = false
             }
-        }
-        .padding(16.dp)
+        },
+        contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = when {
@@ -93,8 +100,8 @@ fun DarkModeToggleButton(viewModel: MainViewModel) {
                 else -> Icons.Outlined.LightMode
             },
             contentDescription = if (isDarkMode) "Dark Mode" else "Light Mode",
-            modifier = Modifier.size(24.dp).scale(1.35f) // 放大图标
-                 .offset(y = iconOffset.value.dp)
+            modifier = Modifier.size(iconSize)
+                 .offset(y = iconOffset.value.dp),
         )
     }
 }

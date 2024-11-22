@@ -1,5 +1,8 @@
-package theme
+package com.supcoder.apksigner.theme
+
+
 import androidx.compose.ui.graphics.Color
+import kotlin.random.Random
 
 val primaryLight = Color(0xFF4C662B)
 val onPrimaryLight = Color(0xFFFFFFFF)
@@ -216,3 +219,24 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1A1C16)
 val surfaceContainerDarkHighContrast = Color(0xFF1E201A)
 val surfaceContainerHighDarkHighContrast = Color(0xFF282B24)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF33362E)
+
+
+/**
+ * 生成随机颜色，方便查看重组情况
+ */
+fun randomComposeColor(): Color {
+    return Color(
+        red = Random.nextInt(256),
+        green = Random.nextInt(256),
+        blue = Random.nextInt(256),
+        alpha = 255
+    )
+}
+
+val appBackgroundColor = Color(0xff1e1f22)
+val appTopBarColor = Color(0xff3c3f41)
+val appBarColor = Color(0xff2b2d30)
+
+val textColor = Color(0xffdfe1e5)
+
+val codeTextColor = Color(0xFFBCBEC4)

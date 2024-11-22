@@ -2,11 +2,21 @@ package com.supcoder.apksigner
 
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -22,6 +32,7 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -39,11 +50,16 @@ import com.supcoder.apksigner.model.DarkThemeConfig
 import com.supcoder.apksigner.platform.createFlowSettings
 import com.supcoder.apksigner.router.Page
 import com.supcoder.apksigner.theme.AppTheme
-import com.supcoder.apksigner.ui.HomeScreen
+import com.supcoder.apksigner.ui.ApkInformation
+import com.supcoder.apksigner.ui.ApkSignature
+import com.supcoder.apksigner.ui.DecompileScreen
 import com.supcoder.apksigner.ui.JsonScreen
-import com.supcoder.apksigner.ui.LanguageScreen
 import com.supcoder.apksigner.ui.SettingsScreen
+import com.supcoder.apksigner.ui.SignatureGeneration
+import com.supcoder.apksigner.ui.SignatureInformation
 import com.supcoder.apksigner.ui.component.DarkModeToggleButton
+import com.supcoder.apksigner.ui.component.NavigationItem
+import com.supcoder.apksigner.ui.component.navigation.CustomNavigationItem
 import com.supcoder.apksigner.vm.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
@@ -92,6 +108,15 @@ suspend fun collectOutputPath(viewModel: MainViewModel) {
 fun MainContentScreen(viewModel: MainViewModel) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    var isCollapsed = remember { mutableStateOf(true) }
+
+    val railWidth = if (isCollapsed.value) 42.dp else 80.dp
+    val animatedWidth by animateDpAsState(targetValue = railWidth)
+
+    val iconSize = if (isCollapsed.value) 16.dp else 24.dp
+    val animatedIconSize by animateDpAsState(targetValue = iconSize)
+
     scope.launch {
         collectOutputPath(viewModel)
     }
@@ -106,11 +131,20 @@ fun MainContentScreen(viewModel: MainViewModel) {
             ) {
                 val pages = Page.entries.toMutableList()
                 // 导航栏
-                NavigationRail(Modifier.fillMaxHeight()) {
+                NavigationRail(Modifier.fillMaxHeight().width(animatedWidth)) {
                     Column(
                         modifier = Modifier.fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        IconButton(onClick = { isCollapsed.value = !isCollapsed.value }) {
+                            Icon(
+//                                imageVector = if (isCollapsed.value) Icons.Filled.ArrowForwardIos else Icons.Filled.ArrowBackIosNew,
+                                imageVector = if (isCollapsed.value) Icons.Filled.Menu
+                                else Icons.Filled.MenuOpen,
+                                contentDescription = "Collapse/Expand"
+                            )
+                        }
+
                         Column(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.Center,
@@ -120,23 +154,30 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                 TooltipBox(
                                     positionProvider = rememberRichTooltipPositionProvider(), tooltip = {
                                         PlainTooltip {
-                                            Text(
-                                                page.title, style = MaterialTheme.typography.bodySmall
-                                            )
+                                            Text(page.title, style = MaterialTheme.typography.bodySmall)
                                         }
                                     }, state = rememberTooltipState(), enableUserInput = viewModel.uiPageIndex != page
                                 ) {
-                                    NavigationRailItem(
-                                        label = { Text(page.title) },
-                                        icon = { Icon(page.icon, contentDescription = page.title) },
+//                                    NavigationRailItem(
+                                        CustomNavigationItem(
+//                                    NavigationItem(
+                                        label = { if (!isCollapsed.value) Text(page.title, style = MaterialTheme.typography.labelSmall) },
+                                        icon = {
+                                            Icon(
+                                                page.icon,
+                                                contentDescription = page.title,
+                                                modifier = Modifier.size(animatedIconSize)
+                                            )
+                                        },
                                         selected = viewModel.uiPageIndex == page,
                                         onClick = { viewModel.updateUiState(page) },
                                         alwaysShowLabel = false,
+
                                     )
                                 }
                             }
                         }
-                        DarkModeToggleButton(viewModel)
+                        DarkModeToggleButton(viewModel, isCollapsed)
                     }
 
 
@@ -144,11 +185,13 @@ fun MainContentScreen(viewModel: MainViewModel) {
                 // 主界面
                 val content: @Composable (Page) -> Unit = { page ->
                     when (page) {
-                        Page.SIGNATURE_INFORMATION -> HomeScreen { }
+//                        Page.SIGNATURE_INFORMATION -> HomeScreen {  }
+                        Page.SIGNATURE_INFORMATION -> SignatureInformation(viewModel)
                         Page.JSON_FORMAT -> JsonScreen(viewModel)
-                        Page.APK_INFORMATION -> LanguageScreen { }
-//                        Page.APK_SIGNATURE -> ApkSignature(viewModel)
-//                        Page.SIGNATURE_GENERATION -> SignatureGeneration(viewModel)
+                        Page.APK_DECOMPILE -> DecompileScreen(null)
+                        Page.APK_INFORMATION -> ApkInformation(viewModel)
+                        Page.APK_SIGNATURE -> ApkSignature(viewModel)
+                        Page.SIGNATURE_GENERATION -> SignatureGeneration(viewModel)
                         Page.SETTINGS -> SettingsScreen(viewModel)
                         else -> SettingsScreen(viewModel)
                     }

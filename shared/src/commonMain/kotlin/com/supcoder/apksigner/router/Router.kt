@@ -3,6 +3,7 @@ package com.supcoder.apksigner.router
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.Factory
 import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.Pin
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 //}
 enum class Page(val title: String, val icon: ImageVector) {
     SIGNATURE_INFORMATION("签名信息", Icons.Rounded.Description),
+    APK_DECOMPILE("APK反编译", Icons.Rounded.Factory),
     JSON_FORMAT("Json处理", Icons.Rounded.FormatSize),
     APK_INFORMATION("APK信息", Icons.Rounded.Android),
     APK_SIGNATURE("APK签名", Icons.Rounded.Pin),

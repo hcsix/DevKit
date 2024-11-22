@@ -35,9 +35,9 @@ kotlin {
                 runtimeOnly(libs.kotlinx.coroutines.swing)
                 implementation(libs.jna)
                 implementation("com.android.tools:sdk-common:31.7.2") {
-                    exclude(group = "org.bouncycastle", module = "bcpkix-jdk18on")
-                    exclude(group = "org.bouncycastle", module = "bcprov-jdk18on")
-                    exclude(group = "org.bouncycastle", module = "bcutil-jdk18on")
+//                    exclude(group = "org.bouncycastle", module = "bcpkix-jdk18on")
+//                    exclude(group = "org.bouncycastle", module = "bcprov-jdk18on")
+//                    exclude(group = "org.bouncycastle", module = "bcutil-jdk18on")
                 }
                 implementation(libs.filekit.core)
                 implementation(libs.multiplatform.settings)
@@ -47,7 +47,21 @@ kotlin {
 //                implementation(libs.moshi)
 //                implementation(libs.moshi.kotlin)
                 implementation(libs.gson)
-
+                // 依赖注入
+                implementation(libs.koin.core)
+                // 多模匹配算法aho-corasick
+                implementation(libs.aho.corasick.double.array.trie)
+                // 解压缩
+                implementation(libs.commons.compress)
+                // jadx
+                implementation(libs.jadx.core)
+                implementation(libs.jadx.dex.input)
+                implementation(libs.logback.classic)
+                // java文件解析
+                implementation(libs.javaparser.symbol.solver.core)
+                implementation(libs.javaparser.core)
+                // xml文件解析
+                implementation(libs.dom4j)
             }
         }
         jvmMain {
@@ -73,11 +87,3 @@ kotlin.sourceSets.all {
     languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
 }
 
-tasks.create("runJvmMain", JavaExec::class.java) {
-    val jars = files().apply {
-        from(configurations.getByName("jvmRuntimeClasspath"))
-        from(tasks.named("jvmJar"))
-    }
-    this.setClasspath(jars)
-    this.mainClass.set("dev.johnoreilly.confetti.MainKt")
-}

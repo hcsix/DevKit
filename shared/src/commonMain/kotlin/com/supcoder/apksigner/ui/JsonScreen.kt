@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.supcoder.apksigner.ui.json.JsonFormatView
+import com.supcoder.apksigner.ui.json.JsonModelView
 import com.supcoder.apksigner.vm.MainViewModel
 
 
@@ -35,14 +36,14 @@ fun JsonScreen(viewModel: MainViewModel) {
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(24.dp),
-                modifier = Modifier.padding(16.dp).height(48.dp),
+                modifier = Modifier.padding(48.dp,16.dp).height(48.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    listOf("格式化", "Java", "Kotlin").forEachIndexed { index, title ->
+                    listOf("格式化", "生成模型").forEachIndexed { index, title ->
                         Tab(
                             modifier = Modifier.weight(1f),
                             selected = tabIndex == index,
@@ -66,8 +67,7 @@ fun JsonScreen(viewModel: MainViewModel) {
             ) {
                 when (tabIndex) {
                     0 -> JsonFormatView(viewModel)
-                    1 -> Text("Profile Content")
-                    2 -> Text("Settings Content")
+                    1 -> JsonModelView(viewModel)
                 }
             }
         }

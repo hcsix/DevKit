@@ -11,6 +11,9 @@ import com.android.apksig.ApkSigner
 import com.android.apksig.ApkVerifier
 import com.android.apksig.KeyConfig
 import com.android.ide.common.signing.KeystoreHelper
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import org.apache.commons.codec.digest.DigestUtils
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.FlowSettings
@@ -370,9 +373,8 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
                 keyStoreInfoState.keyStoreAlisaPassword,
                 keyStoreInfoState.keyStoreAlisa,
                 "CN=${keyStoreInfoState.authorName},OU=${keyStoreInfoState.organizationalUnit},O=${keyStoreInfoState.organizational},L=${keyStoreInfoState.city},S=${keyStoreInfoState.province}, C=${keyStoreInfoState.countryCode}",
-                keyStoreInfoState.validityPeriod.toInt()
-//                ,
-//                destStoreSize
+                keyStoreInfoState.validityPeriod.toInt(),
+                destStoreSize
             )
             if (result) {
                 val snackbarVisualsData = SnackbarVisualsData(message = "创建签名成功，点击跳转至签名文件",
@@ -553,6 +555,97 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
             fileInputStream?.close()
         }
         return false
+    }
+
+    fun convertToJsonKotlin(jsonString: String): String {
+        val jsonElement = JsonParser.parseString(jsonString)
+        return generateKotlinDataClass("MyData", jsonElement)
+    }
+
+    fun convertToJsonJava(jsonString: String): String {
+        val jsonElement = JsonParser.parseString(jsonString)
+        return generateJavaClass("MyData", jsonElement)
+    }
+
+    private fun generateKotlinDataClass(className: String, jsonElement: JsonElement): String {
+        return when (jsonElement) {
+            is JsonObject -> {
+                val properties = jsonElement.entrySet().joinToString(",\n") { entry ->
+                    val propertyName = entry.key
+                    val propertyType = determineType(entry.value)
+                    "val $propertyName: $propertyType"
+                }
+                "data class $className {\n$properties\n}"
+            }
+            else -> throw IllegalArgumentException("Unsupported JSON type")
+        }
+    }
+
+    private fun generateJavaClass(className: String, jsonElement: JsonElement): String {
+        return when (jsonElement) {
+            is JsonObject -> {
+                val properties = jsonElement.entrySet().joinToString(",\n") { entry ->
+                    val propertyName = entry.key
+                    val propertyType = determineJavaType(entry.value)
+                    "private ${propertyType} ${propertyName};"
+                }
+                val gettersSetters = jsonElement.entrySet().joinToString("\n") { entry ->
+                    val propertyName = entry.key
+                    val propertyType = determineJavaType(entry.value)
+                    """
+                    public ${propertyType} get${capitalize(propertyName)}() {
+                        return ${propertyName};
+                    }
+
+                    public void set${capitalize(propertyName)}(${propertyType} ${propertyName}) {
+                        this.${propertyName} = ${propertyName};
+                    }
+                    """.trimIndent()
+                }
+                "public class $className {\n$properties\n\n$gettersSetters\n}"
+            }
+            else -> throw IllegalArgumentException("Unsupported JSON type")
+        }
+    }
+
+    private fun determineType(jsonElement: JsonElement): String {
+        return when {
+            jsonElement.isJsonObject -> "Map<String, Any?>"
+            jsonElement.isJsonArray -> "List<Any?>"
+            jsonElement.isJsonNull -> "Any?"
+            jsonElement.isJsonPrimitive -> {
+                val primitive = jsonElement.asJsonPrimitive
+                when {
+                    primitive.isNumber -> "Int" // 或者更通用的 Number
+                    primitive.isBoolean -> "Boolean"
+                    primitive.isString -> "String"
+                    else -> "Any?"
+                }
+            }
+            else -> "Any?"
+        }
+    }
+
+    private fun determineJavaType(jsonElement: JsonElement): String {
+        return when {
+            jsonElement.isJsonObject -> "Map<String, Object>"
+            jsonElement.isJsonArray -> "List<Object>"
+            jsonElement.isJsonNull -> "Object"
+            jsonElement.isJsonPrimitive -> {
+                val primitive = jsonElement.asJsonPrimitive
+                when {
+                    primitive.isNumber -> "Integer" // 或者更通用的 Number
+                    primitive.isBoolean -> "Boolean"
+                    primitive.isString -> "String"
+                    else -> "Object"
+                }
+            }
+            else -> "Object"
+        }
+    }
+
+    private fun capitalize(str: String): String {
+        return str.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     }
 }
 
