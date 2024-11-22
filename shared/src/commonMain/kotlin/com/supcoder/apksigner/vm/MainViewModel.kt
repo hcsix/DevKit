@@ -1,8 +1,6 @@
 package com.supcoder.apksigner.vm
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -14,19 +12,12 @@ import com.android.ide.common.signing.KeystoreHelper
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import org.apache.commons.codec.digest.DigestUtils
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.supcoder.apksigner.database.PreferencesDataSource
 import com.supcoder.apksigner.model.ApkInformation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import com.supcoder.apksigner.model.ApkSignature
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.model.IconFactoryInfo
 import com.supcoder.apksigner.model.JunkCodeInfo
 import com.supcoder.apksigner.model.KeyStoreInfo
@@ -45,6 +36,13 @@ import com.supcoder.apksigner.util.getVerifier
 import com.supcoder.apksigner.util.isMac
 import com.supcoder.apksigner.util.isWindows
 import com.supcoder.apksigner.util.resourcesDirWithOs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.apache.commons.codec.digest.DigestUtils
 import utils.update
 import java.io.BufferedReader
 import java.io.File
@@ -70,6 +68,8 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
     val themeConfig = preferences.themeConfig.stateIn(
         scope = viewModelScope, started = WhileUiSubscribed, initialValue = PreferencesDataSource.DEFAULT_THEME_CONFIG
     )
+
+
 
     // 偏好设置
     val userData = preferences.userData.stateIn(
@@ -129,15 +129,14 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
     private val _snackbarVisuals = MutableStateFlow(SnackbarVisualsData())
     val snackbarVisuals = _snackbarVisuals.asStateFlow()
 
-
     fun toggleDarkMode(isDarkMode :Boolean){
-        saveThemeConfig(if (isDarkMode) DarkThemeConfig.DARK else DarkThemeConfig.LIGHT)
+        saveThemeConfig(if (isDarkMode) ThemeConfig.DARK else ThemeConfig.LIGHT)
     }
 
     /**
      * 更新主题
      */
-    fun saveThemeConfig(themeConfig: DarkThemeConfig) {
+    fun saveThemeConfig(themeConfig: ThemeConfig) {
         viewModelScope.launch {
             preferences.saveThemeConfig(themeConfig)
         }

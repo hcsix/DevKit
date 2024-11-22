@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.supcoder.apksigner.theme.codeTextColor
 import com.supcoder.apksigner.manager.transfer.JavaKeywordVisualTransformation
 import com.supcoder.apksigner.ui.decompile.scroll.ScrollPanel
+import com.supcoder.apksigner.vm.MainViewModel
 
 
 /**
@@ -25,6 +26,7 @@ import com.supcoder.apksigner.ui.decompile.scroll.ScrollPanel
  */
 @Composable
 fun EditPanel(
+    isDark: Boolean,
     modifier: Modifier,
     textContent: String,
     textType: String
@@ -42,7 +44,7 @@ fun EditPanel(
         TextField(
             value = textContent,
             colors = TextFieldDefaults.textFieldColors(
-                textColor = codeTextColor,
+                textColor = codeTextColor(isDark = isDark),
                 focusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
@@ -53,7 +55,7 @@ fun EditPanel(
 
                 ),
             textStyle = TextStyle(
-                color = codeTextColor,
+                color = codeTextColor(isDark),
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
                 fontFamily = FontFamily.Monospace

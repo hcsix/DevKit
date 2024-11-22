@@ -2,17 +2,14 @@ package com.supcoder.apksigner.ui.decompile.drag
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.ComposePanel
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.unit.sp
-import com.supcoder.apksigner.theme.textColor
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.DnDConstants
 import java.awt.dnd.DropTarget
@@ -69,8 +66,10 @@ fun DropHerePanel(
         contentAlignment = Alignment.Center
     ) {
 
-        Text(text = "请拖拽文件到这里哦", fontSize = 36.sp, color = textColor)
-
+        Text(
+            text = "请拖拽文件到这里哦",
+            style = MaterialTheme.typography.labelLarge,
+        )
 //        DisposableEffect(true) {
 //            pane.add(component)
 //            onDispose {

@@ -34,7 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.model.DestStoreSize
 import com.supcoder.apksigner.model.DestStoreType
 import com.supcoder.apksigner.ui.component.FolderInput
@@ -268,7 +268,7 @@ private fun Conventional(
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 62.dp)
                 ) {
-                    val modeList = listOf(DarkThemeConfig.FOLLOW_SYSTEM, DarkThemeConfig.LIGHT, DarkThemeConfig.DARK)
+                    val modeList = listOf(ThemeConfig.FOLLOW_SYSTEM, ThemeConfig.LIGHT, ThemeConfig.DARK)
                     modeList.forEach { theme ->
                         ElevatedFilterChip(modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                             selected = themeConfig == theme,

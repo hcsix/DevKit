@@ -54,7 +54,7 @@ fun JsonFormatView(mainViewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp, 16.dp, 16.dp, 12.dp)
+            .padding(16.dp, 12.dp, 16.dp, 12.dp)
     ) {
         Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             val content: @Composable (Boolean) -> Unit = {
@@ -69,7 +69,7 @@ fun JsonFormatView(mainViewModel: MainViewModel) {
             )
         }
 
-        Box(modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp).fillMaxWidth().wrapContentHeight()) {
+        Box(modifier = Modifier.padding(0.dp,2.dp, 0.dp, 0.dp).fillMaxWidth().wrapContentHeight()) {
 
             ExpandCollapseButton(
                 modifier = Modifier.align(Alignment.CenterStart),
@@ -101,7 +101,7 @@ fun JsonFormatSinglePanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewM
         Box(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 8.dp)
+                .padding(start = 2.dp)
         ) {
             TextField(
                 value = jsonViewModel.singlePanelJson,
@@ -110,8 +110,8 @@ fun JsonFormatSinglePanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewM
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(Color.White, RoundedCornerShape(8.dp))
-                    .padding(8.dp)
+                    .background(Color.White, RoundedCornerShape(2.dp))
+                    .padding(2.dp)
             )
 
 
@@ -147,7 +147,7 @@ fun JsonFormatTwoPanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewMode
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(end = 8.dp)
+                .padding(end = 2.dp)
         ) {
             TextField(
                 value = jsonViewModel.rawJson,
@@ -156,8 +156,8 @@ fun JsonFormatTwoPanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewMode
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(Color.LightGray, RoundedCornerShape(8.dp))
-                    .padding(8.dp)
+                    .background(Color.LightGray, RoundedCornerShape(2.dp))
+                    .padding(2.dp)
             )
         }
 
@@ -165,7 +165,7 @@ fun JsonFormatTwoPanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewMode
         Box(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 8.dp)
+                .padding(start = 4.dp)
         ) {
             TextField(
                 value = jsonViewModel.formattedJson,
@@ -175,8 +175,8 @@ fun JsonFormatTwoPanel(mainViewModel: MainViewModel, jsonViewModel: JsonViewMode
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(Color.White, RoundedCornerShape(8.dp))
-                    .padding(8.dp)
+                    .background(Color.White, RoundedCornerShape(2.dp))
+                    .padding(2.dp)
             )
 
 

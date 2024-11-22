@@ -43,8 +43,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.file.FileSelectorType
-import com.supcoder.apksigner.model.DarkThemeConfig
-import com.supcoder.apksigner.util.LottieAnimation
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.util.checkFile
 import com.supcoder.apksigner.util.toFileExtensions
 import com.supcoder.apksigner.vm.MainViewModel
@@ -321,9 +320,9 @@ fun LoadingAnimate(visible: Boolean, viewModel: MainViewModel, scope: CoroutineS
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp, end = 80.dp), contentAlignment = Alignment.Center
         ) {
             val useDarkTheme = when (viewModel.themeConfig.value) {
-                DarkThemeConfig.LIGHT -> false
-                DarkThemeConfig.DARK -> true
-                DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+                ThemeConfig.LIGHT -> false
+                ThemeConfig.DARK -> true
+                ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
             }
 //            if (useDarkTheme) {
 //                LottieAnimation(scope, "files/lottie_loading_light.json")

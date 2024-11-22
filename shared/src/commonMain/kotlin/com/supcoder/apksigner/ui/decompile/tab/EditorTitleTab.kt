@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun EditorTitleTab(
+    isDark: Boolean,
     modifier: Modifier,
     editorTitleTabState: EditorTitleTabState,
     editorTitleTabAction: EditorTitleTabAction
@@ -60,6 +61,7 @@ fun EditorTitleTab(
     ) {
         itemsIndexed(items = editorTitleTabState.viewedFileList) { index, item ->
             TitleTabItem(
+                isDark = isDark,
                 fileItemInfo = item,
                 isSelected = index == editorTitleTabState.selectedIndex,
                 onClick = {
@@ -99,6 +101,7 @@ fun EditorTitleTab(
 
 @Composable
 private fun TitleTabItem(
+    isDark: Boolean,
     fileItemInfo: FileItemInfo,
     isSelected: Boolean,
     onClick: () -> Unit = {},
@@ -130,7 +133,7 @@ private fun TitleTabItem(
                 color = if (isSelected) {
                     Color.White
                 } else {
-                    codeTextColor
+                    codeTextColor(isDark = isDark)
                 },
                 fontSize = 14.sp,
                 modifier = Modifier.weight(1f),

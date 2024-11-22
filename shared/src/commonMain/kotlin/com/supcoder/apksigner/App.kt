@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.russhwolf.settings.ExperimentalSettingsApi
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.platform.createFlowSettings
 import com.supcoder.apksigner.router.Page
 import com.supcoder.apksigner.theme.AppTheme
@@ -69,9 +69,9 @@ fun App() {
     val viewModel = viewModel { MainViewModel(settings = createFlowSettings()) }
     val themeConfig by viewModel.themeConfig.collectAsState()
     val useDarkTheme = when (themeConfig) {
-        DarkThemeConfig.LIGHT -> false
-        DarkThemeConfig.DARK -> true
-        DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        ThemeConfig.LIGHT -> false
+        ThemeConfig.DARK -> true
+        ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
         else -> false
     }
     AppTheme(useDarkTheme) {
@@ -187,7 +187,7 @@ fun MainContentScreen(viewModel: MainViewModel) {
 //                        Page.SIGNATURE_INFORMATION -> HomeScreen {  }
                         Page.SIGNATURE_INFORMATION -> SignatureInformation(viewModel)
                         Page.JSON_FORMAT -> JsonScreen(viewModel)
-                        Page.APK_DECOMPILE -> DecompileScreen(null)
+                        Page.APK_DECOMPILE -> DecompileScreen(viewModel)
                         Page.APK_INFORMATION -> ApkInformation(viewModel)
                         Page.APK_SIGNATURE -> ApkSignature(viewModel)
                         Page.SIGNATURE_GENERATION -> SignatureGeneration(viewModel)

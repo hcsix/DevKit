@@ -5,7 +5,7 @@ import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.coroutines.toBlockingSettings
 import com.russhwolf.settings.serialization.decodeValue
 import com.russhwolf.settings.serialization.encodeValue
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.model.DestStoreSize
 import com.supcoder.apksigner.model.DestStoreType
 import com.supcoder.apksigner.model.UserData
@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.ExperimentalSerializationApi
 import com.supcoder.apksigner.util.getDownloadDirectory
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.serializer
 
 /**
  * @Author      : LazyIonEs
@@ -30,7 +28,7 @@ class PreferencesDataSource @OptIn(ExperimentalSettingsApi::class) constructor(p
 
     companion object {
         private const val THEME_CONFIG = "theme_config"
-        val DEFAULT_THEME_CONFIG = DarkThemeConfig.FOLLOW_SYSTEM
+        val DEFAULT_THEME_CONFIG = ThemeConfig.FOLLOW_SYSTEM
         private const val USER_DATA = "user_data"
         val DEFAULT_USER_DATA = UserData(
             defaultOutputPath = getDownloadDirectory(),
@@ -50,9 +48,9 @@ class PreferencesDataSource @OptIn(ExperimentalSettingsApi::class) constructor(p
     val themeConfig = settings.getStringOrNullFlow(THEME_CONFIG).map { string ->
         string?.let {
             when (it) {
-                DarkThemeConfig.FOLLOW_SYSTEM.name -> DarkThemeConfig.FOLLOW_SYSTEM
-                DarkThemeConfig.DARK.name -> DarkThemeConfig.DARK
-                else -> DarkThemeConfig.LIGHT
+                ThemeConfig.FOLLOW_SYSTEM.name -> ThemeConfig.FOLLOW_SYSTEM
+                ThemeConfig.DARK.name -> ThemeConfig.DARK
+                else -> ThemeConfig.LIGHT
             }
         } ?: let {
             DEFAULT_THEME_CONFIG
@@ -63,7 +61,7 @@ class PreferencesDataSource @OptIn(ExperimentalSettingsApi::class) constructor(p
         _userData.value = blockingSettings.decodeValue(UserData.serializer(), USER_DATA, DEFAULT_USER_DATA)
     }
 
-    suspend fun saveThemeConfig(themeConfig: DarkThemeConfig) {
+    suspend fun saveThemeConfig(themeConfig: ThemeConfig) {
         settings.putString(THEME_CONFIG, themeConfig.name)
     }
 

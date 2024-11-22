@@ -26,10 +26,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.vm.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -44,9 +43,9 @@ import kotlinx.coroutines.launch
 fun DarkModeToggleButton(viewModel: MainViewModel, isCollapsed: MutableState<Boolean>) {
     val themeConfig by viewModel.themeConfig.collectAsState()
     val isDarkMode = when (themeConfig) {
-        DarkThemeConfig.LIGHT -> false
-        DarkThemeConfig.DARK -> true
-        DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        ThemeConfig.LIGHT -> false
+        ThemeConfig.DARK -> true
+        ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
         else -> false
     }
     var interactionSource = remember { MutableInteractionSource() }

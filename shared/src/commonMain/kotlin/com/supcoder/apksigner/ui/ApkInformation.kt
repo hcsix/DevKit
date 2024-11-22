@@ -32,12 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.file.FileSelectorType
 import com.supcoder.apksigner.model.ApkInformation
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.ui.component.FileButton
 import com.supcoder.apksigner.ui.component.LoadingAnimate
 import com.supcoder.apksigner.ui.component.UploadAnimate
 import com.supcoder.apksigner.ui.component.dragAndDropTarget
-import com.supcoder.apksigner.util.LottieAnimation
 import com.supcoder.apksigner.util.copy
 import com.supcoder.apksigner.util.formatFileSize
 import com.supcoder.apksigner.util.isApk
@@ -70,9 +69,9 @@ fun ApkInformation(viewModel: MainViewModel) {
 private fun ApkInformationLottie(viewModel: MainViewModel, scope: CoroutineScope) {
     val themeConfig by viewModel.themeConfig.collectAsState()
     val useDarkTheme = when (themeConfig) {
-        DarkThemeConfig.LIGHT -> false
-        DarkThemeConfig.DARK -> true
-        DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        ThemeConfig.LIGHT -> false
+        ThemeConfig.DARK -> true
+        ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
     }
     Box(
         modifier = Modifier.padding(6.dp), contentAlignment = Alignment.Center

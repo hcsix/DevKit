@@ -33,30 +33,36 @@ fun JsonScreen(viewModel: MainViewModel) {
 
     Scaffold(
         topBar = {
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = RoundedCornerShape(24.dp),
-                modifier = Modifier.padding(48.dp,16.dp).height(48.dp),
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+            Row(modifier = Modifier.fillMaxWidth().padding(48.dp, 16.dp, 48.dp, 0.dp).height(36.dp)) {
+                Spacer(modifier = Modifier.weight(0.3f))
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = Modifier.weight(1f),
                 ) {
-                    listOf("格式化", "生成模型").forEachIndexed { index, title ->
-                        Tab(
-                            modifier = Modifier.weight(1f),
-                            selected = tabIndex == index,
-                            onClick = {
-                                tabIndex = index
-                                // 这里可以添加导航逻辑
-                                // navController.navigate("route_for_$title")
-                            },
-                            title = title
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        listOf("格式化", "生成模型").forEachIndexed { index, title ->
+                            Tab(
+                                modifier = Modifier.weight(1f),
+                                selected = tabIndex == index,
+                                onClick = {
+                                    tabIndex = index
+                                    // 这里可以添加导航逻辑
+                                    // navController.navigate("route_for_$title")
+                                },
+                                title = title
+                            )
+                        }
                     }
                 }
+                Spacer(modifier = Modifier.weight(0.3f))
             }
+
+
         },
         content = { padding ->
             Box(

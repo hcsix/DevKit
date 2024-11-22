@@ -14,7 +14,7 @@ data class UserData(
     companion object
 }
 
-enum class DarkThemeConfig(val value: String) {
+enum class ThemeConfig(val value: String) {
     FOLLOW_SYSTEM("跟随系统"), LIGHT("亮色模式"), DARK("暗色模式"),
 }
 

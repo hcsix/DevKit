@@ -64,7 +64,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.file.FileSelectorType
-import com.supcoder.apksigner.model.DarkThemeConfig
+import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.model.Verifier
 import com.supcoder.apksigner.model.VerifierResult
 import com.supcoder.apksigner.ui.component.FileButton
@@ -107,9 +107,9 @@ fun SignatureInformation(
 private fun SignatureLottie(viewModel: MainViewModel, scope: CoroutineScope) {
     val themeConfig by viewModel.themeConfig.collectAsState()
     val useDarkTheme = when (themeConfig) {
-        DarkThemeConfig.LIGHT -> false
-        DarkThemeConfig.DARK -> true
-        DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        ThemeConfig.LIGHT -> false
+        ThemeConfig.DARK -> true
+        ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
     }
     Box(
         modifier = Modifier.padding(6.dp), contentAlignment = Alignment.Center

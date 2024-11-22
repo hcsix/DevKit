@@ -10,6 +10,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowCircleRight
+import androidx.compose.material.icons.rounded.ArrowDownward
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowRight
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +27,10 @@ import com.supcoder.apksigner.manager.NurseManager
 import com.supcoder.apksigner.model.ProjectTreeType
 import com.supcoder.apksigner.model.action.ProjectPanelAction
 import com.supcoder.apksigner.model.state.ProjectPanelState
-import com.supcoder.apksigner.theme.appBarColor
-import com.supcoder.apksigner.theme.textColor
 import com.supcoder.apksigner.model.FileItemInfo
+import com.supcoder.apksigner.theme.coderBarColor
 import com.supcoder.apksigner.ui.decompile.scroll.ScrollPanel
 import com.supcoder.apksigner.util.getResByFileItem
-import com.supcoder.apksigner.vm.ProjectPanelViewModel
 
 /**
  * Project 面板相关UI
@@ -36,6 +38,7 @@ import com.supcoder.apksigner.vm.ProjectPanelViewModel
 
 @Composable
 fun ProjectPanel(
+    isDark: Boolean,
     modifier: Modifier = Modifier,
     projectPanelAction: ProjectPanelAction = NurseManager.projectPanelViewModel.projectPanelAction,
     projectPanelState: ProjectPanelState = NurseManager.projectPanelViewModel.projectPanelState.value
@@ -50,7 +53,7 @@ fun ProjectPanel(
         Row(
             modifier = Modifier.fillMaxWidth()
                 .height(40.dp)
-                .background(color = appBarColor)
+                .background(color = coderBarColor(isDark = isDark))
                 .clickable { projectPanelAction.onProjectTreeTypeClick(projectPanelState.projectTreeType) }
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -66,16 +69,21 @@ fun ProjectPanel(
                         (projectPanelState.projectTreeType as ProjectTreeType.PACKAGES).name
                     }
                 },
-                color = textColor,
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
             )
 
             Icon(
-                imageVector = Icons.Rounded.ArrowCircleRight,
+                imageVector = Icons.Rounded.ArrowRight,
                 contentDescription = "",
                 modifier = Modifier.size(10.dp)
-                    .rotate(90f)
+                    .rotate(
+                        if (projectPanelState.projectTreeType is ProjectTreeType.PROJECT) {
+                            90f
+                        } else {
+                            0f
+                        }
+                    )
             )
         }
 
@@ -87,7 +95,7 @@ fun ProjectPanel(
         // 工程树结构
         ScrollPanel(
             modifier = Modifier.weight(1f)
-                .background(color = appBarColor)
+                .background(color = coderBarColor(isDark))
                 .padding(2.dp),
             horizontalScrollStateAdapter = rememberScrollbarAdapter(horizontalScrollState),
             verticalScrollStateAdapter = rememberScrollbarAdapter(verticalScrollState)
@@ -161,7 +169,7 @@ private fun ProjectItem(
             text = item.showName.ifEmpty {
                 item.name
             },
-            color = textColor,
+            style = MaterialTheme.typography.labelSmall,
             fontSize = if (item.isRootFile) {
                 16.sp
             } else {

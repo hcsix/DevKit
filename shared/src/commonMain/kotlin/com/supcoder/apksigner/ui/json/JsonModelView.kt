@@ -47,7 +47,7 @@ fun JsonModelView(mainViewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp, 16.dp, 16.dp, 12.dp)
+            .padding(16.dp, 12.dp, 16.dp, 12.dp)
     ) {
         Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             // 上半部分：左右两侧布局
@@ -60,7 +60,7 @@ fun JsonModelView(mainViewModel: MainViewModel) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp)
+                        .padding(end = 2.dp)
                 ) {
                     TextField(
                         value = rawJson.value,
@@ -71,8 +71,8 @@ fun JsonModelView(mainViewModel: MainViewModel) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
-                            .background(Color.LightGray, RoundedCornerShape(8.dp))
-                            .padding(8.dp)
+                            .background(Color.LightGray, RoundedCornerShape(4.dp))
+                            .padding(2.dp)
                     )
                 }
 
@@ -80,7 +80,7 @@ fun JsonModelView(mainViewModel: MainViewModel) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 8.dp)
+                        .padding(start = 4.dp)
                 ) {
                     TextField(
                         value = generatedCode.value,
@@ -90,8 +90,8 @@ fun JsonModelView(mainViewModel: MainViewModel) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
-                            .background(Color.White, RoundedCornerShape(8.dp))
-                            .padding(8.dp)
+                            .background(Color.White, RoundedCornerShape(2.dp))
+                            .padding(2.dp)
                     )
 
                     Box(
@@ -116,14 +116,14 @@ fun JsonModelView(mainViewModel: MainViewModel) {
             }
         }
 
-        Box(modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp).fillMaxWidth().wrapContentHeight()) {
+        Box(modifier = Modifier.padding(0.dp, 2.dp, 0.dp, 0.dp).fillMaxWidth().wrapContentHeight()) {
             // 下半部分：转换按钮
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier.padding(end = 2.dp),
                     onClick = {
                         // 转成 Kotlin 代码的逻辑
                         try {

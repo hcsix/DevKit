@@ -2,6 +2,7 @@ package com.supcoder.apksigner.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,15 +14,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.manager.NurseManager
 import com.supcoder.apksigner.model.EditorType
-import com.supcoder.apksigner.theme.appBackgroundColor
-import com.supcoder.apksigner.theme.appBarColor
+import com.supcoder.apksigner.model.ThemeConfig
+import com.supcoder.apksigner.theme.codeBackgroundColor
+import com.supcoder.apksigner.theme.coderBarColor
 import com.supcoder.apksigner.ui.decompile.drag.DropHerePanel
 import com.supcoder.apksigner.ui.decompile.panel.EditPanel
 import com.supcoder.apksigner.ui.decompile.panel.ImagePanel
@@ -33,7 +36,7 @@ import com.supcoder.apksigner.ui.decompile.tab.RightBar
 import com.supcoder.apksigner.vm.DragViewModel
 import com.supcoder.apksigner.vm.EditorViewModel
 import com.supcoder.apksigner.vm.LeftBarViewModel
-import com.supcoder.apksigner.vm.ProjectPanelViewModel
+import com.supcoder.apksigner.vm.MainViewModel
 
 /**
  * DecompileScreen
@@ -46,19 +49,26 @@ import com.supcoder.apksigner.vm.ProjectPanelViewModel
  */
 @Composable
 fun DecompileScreen(
-    composeWindow: ComposeWindow?,
+    mainViewModel: MainViewModel,
     leftBarViewModel: LeftBarViewModel = NurseManager.leftBarViewModel,
     dragViewModel: DragViewModel = NurseManager.dragViewModel,
     editorViewModel: EditorViewModel = NurseManager.editorViewModel
 ) {
+    val themeConfig by mainViewModel.themeConfig.collectAsState()
+    val isDarkTheme = when (themeConfig) {
+        ThemeConfig.LIGHT -> false
+        ThemeConfig.DARK -> true
+        ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+        else -> false
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
-            .clip(RoundedCornerShape(8.dp))
-            .border(width = 2.dp, color = Color(0xff393b40), shape = RoundedCornerShape(8.dp))
-            .background(color = appBackgroundColor),
+            .clip(RoundedCornerShape(1.dp))
+            .border(width = 2.dp, color = Color(0xff393b40), shape = RoundedCornerShape(1.dp))
+            .background(color = codeBackgroundColor(isDark = isDarkTheme)),
         verticalArrangement = Arrangement.spacedBy(1.dp)
     ) {
-
 
         Row(
             modifier = Modifier.weight(1f),
@@ -67,6 +77,7 @@ fun DecompileScreen(
 
             // 左侧功能栏
             LeftBar(
+                isDark = isDarkTheme,
                 leftBarAction = leftBarViewModel.leftBarAction,
                 leftBarState = leftBarViewModel.leftBarState.value
             )
@@ -84,11 +95,10 @@ fun DecompileScreen(
                     // 工程项目结构区域
                     if (leftBarViewModel.leftBarState.value.projectOn) {
                         ProjectPanel(
-                            modifier = Modifier.width(320.dp)
+                            isDarkTheme,
+                            modifier = Modifier.width(240.dp)
                         )
                     }
-
-
                     when (editorViewModel.editorType.value) {
                         is EditorType.NONE -> {
                             // 拖动文件到此
@@ -108,6 +118,7 @@ fun DecompileScreen(
 
                                 // 编辑区的标题栏
                                 EditorTitleTab(
+                                    isDarkTheme,
                                     modifier = Modifier.fillMaxWidth()
                                         .height(40.dp)
                                         .background(color = Color.Transparent),
@@ -115,15 +126,16 @@ fun DecompileScreen(
                                     editorTitleTabAction = editorViewModel.editorTitleTabAction
                                 )
 
-                                Divider(modifier = Modifier.fillMaxWidth().height(1.dp), color = appBarColor)
+                                Divider(modifier = Modifier.fillMaxWidth().height(1.dp), color = coderBarColor(isDarkTheme))
 
                                 when (editorViewModel.editorType.value) {
                                     is EditorType.TEXT -> {
                                         // 代码编辑区域
                                         EditPanel(
+                                            isDarkTheme,
                                             modifier = Modifier.fillMaxSize()
                                                 .weight(1f)
-                                                .background(color = appBackgroundColor)
+                                                .background(color = codeBackgroundColor(isDarkTheme))
                                                 .padding(2.dp),
                                             textContent = (editorViewModel.editorType.value as EditorType.TEXT).textContent,
                                             textType = (editorViewModel.editorType.value as EditorType.TEXT).textType,
@@ -135,7 +147,7 @@ fun DecompileScreen(
                                         ImagePanel(
                                             modifier = Modifier.fillMaxSize()
                                                 .weight(1f)
-                                                .background(color = appBackgroundColor)
+                                                .background(color = codeBackgroundColor(isDarkTheme))
                                                 .padding(2.dp),
                                             content = (editorViewModel.editorType.value as EditorType.IMAGE).imagePath
                                         )
@@ -156,10 +168,10 @@ fun DecompileScreen(
             }
 
             // 右侧功能栏
-            RightBar()
+            RightBar(isDarkTheme)
         }
 
         // 底部功能栏
-        BottomBar()
+        BottomBar(isDarkTheme)
     }
 }

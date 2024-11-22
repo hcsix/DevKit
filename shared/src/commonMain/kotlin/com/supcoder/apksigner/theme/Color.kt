@@ -233,10 +233,22 @@ fun randomComposeColor(): Color {
     )
 }
 
-val appBackgroundColor = Color(0xff1e1f22)
-val appTopBarColor = Color(0xff3c3f41)
-val appBarColor = Color(0xff2b2d30)
 
-val textColor = Color(0xffdfe1e5)
+fun codeTextColor(isDark: Boolean): Color {
+    return if (isDark) Color(0xFFBCBEC4) else Color(0xFF2B2D30)
+}
 
-val codeTextColor = Color(0xFFBCBEC4)
+fun codeBackgroundColor(isDark: Boolean): Color {
+    return if (isDark) Color(0xff1e1f22) else Color(0xFFE6E6E6)
+}
+
+fun codeKeywordColor(isDark: Boolean): Color {
+    return if (isDark) Color(0xFFF5A623) else Color(0xFFF5A623)
+}
+
+fun coderBarColor(isDark: Boolean): Color {
+    return if (isDark) Color(0xff2b2d30) else Color(0xFFE6E6E6)
+}
+
+
+
