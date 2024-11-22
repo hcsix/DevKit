@@ -1,8 +1,5 @@
 package com.supcoder.apksigner.ui.component.navigation
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRailItem
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -14,27 +11,37 @@ import androidx.compose.ui.unit.dp
  */
 object NavigationConstants {
     val NavigationRailItemHeight = 56.0.dp
+
+
     val NavigationRailItemWidth = 80.0.dp
+    val NavigationRailItemWidth_COLLAPSED = 42.0.dp
+
+    fun navigationRailItemWidth(isCollapsed: Boolean = false) =
+        if (isCollapsed) NavigationRailItemWidth_COLLAPSED else NavigationRailItemWidth
 
     val ActiveIndicatorWidth = 56.0.dp
+    val ActiveIndicatorWidth_COLLAPSED = 32.0.dp
+    fun activeIndicatorWidth(isCollapsed: Boolean = false) =
+        if (isCollapsed) ActiveIndicatorWidth_COLLAPSED else ActiveIndicatorWidth
+
     val ActiveIndicatorHeight = 32.0.dp
-
-    val IconSize = 24.0.dp
-
-    val ActiveIndicatorShape = ShapeKeyTokens.CornerFull
-    val NoLabelActiveIndicatorShape = ShapeKeyTokens.CornerFull
-
-    val ItemAnimationDurationMillis: Int = 150
-
     val NoLabelActiveIndicatorHeight = 56.0.dp
 
+    val IconSize = 24.0.dp
+    val IconSize_COLLAPSED = 16.0.dp
+    fun iconSize(isCollapsed: Boolean) = if (isCollapsed) IconSize_COLLAPSED else IconSize
 
-    /*@VisibleForTesting*/
-    /** Vertical padding between the contents of a [NavigationRailItem] and its top/bottom. */
     val NavigationRailItemVerticalPadding: Dp = 4.dp
+    val ItemAnimationDurationMillis: Int = 150
 
     val IndicatorHorizontalPadding: Dp =
         (ActiveIndicatorWidth - IconSize) / 2
+    val IndicatorHorizontalPadding_COLLAPSED: Dp =
+        (ActiveIndicatorWidth_COLLAPSED - IconSize_COLLAPSED) / 2
+
+    fun indicatorHorizontalPadding(isCollapsed: Boolean) =
+        if (isCollapsed) IndicatorHorizontalPadding_COLLAPSED else IndicatorHorizontalPadding
+
 
     val IndicatorVerticalPaddingWithLabel: Dp =
         (ActiveIndicatorHeight - IconSize) / 2
@@ -51,56 +58,7 @@ object NavigationConstants {
 
     const val LabelLayoutIdTag: String = "label"
 
-
-    var defaultNavigationItemColors: NavigationItemColors? = null
-
-    internal const val DisabledAlpha = 0.38f
-
-    @Composable
-    fun colors() = defaultNavigationItemColors ?: NavigationItemColors(
-        selectedIconColor = MaterialTheme.colorScheme.secondaryContainer,
-        selectedTextColor = MaterialTheme.colorScheme.surface,
-        selectedIndicatorColor = MaterialTheme.colorScheme.secondaryContainer,
-        unselectedIconColor = MaterialTheme.colorScheme.surfaceVariant,
-        unselectedTextColor = MaterialTheme.colorScheme.surfaceVariant,
-        disabledIconColor = MaterialTheme.colorScheme.surfaceVariant
-            .copy(alpha = DisabledAlpha),
-        disabledTextColor = MaterialTheme.colorScheme.surfaceVariant
-            .copy(alpha = DisabledAlpha),
-    )
-        .also { defaultNavigationItemColors = it }
 }
 
 
 
-enum class ShapeKeyTokens {
-    CornerExtraLarge,
-    CornerExtraLargeTop,
-    CornerExtraSmall,
-    CornerExtraSmallTop,
-    CornerFull,
-    CornerLarge,
-    CornerLargeEnd,
-    CornerLargeTop,
-    CornerMedium,
-    CornerNone,
-    CornerSmall,
-}
-
-enum class TypographyKeyTokens {
-    BodyLarge,
-    BodyMedium,
-    BodySmall,
-    DisplayLarge,
-    DisplayMedium,
-    DisplaySmall,
-    HeadlineLarge,
-    HeadlineMedium,
-    HeadlineSmall,
-    LabelLarge,
-    LabelMedium,
-    LabelSmall,
-    TitleLarge,
-    TitleMedium,
-    TitleSmall,
-}

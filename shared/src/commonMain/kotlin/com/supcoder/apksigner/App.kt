@@ -2,16 +2,11 @@ package com.supcoder.apksigner
 
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -58,8 +52,8 @@ import com.supcoder.apksigner.ui.SettingsScreen
 import com.supcoder.apksigner.ui.SignatureGeneration
 import com.supcoder.apksigner.ui.SignatureInformation
 import com.supcoder.apksigner.ui.component.DarkModeToggleButton
-import com.supcoder.apksigner.ui.component.NavigationItem
-import com.supcoder.apksigner.ui.component.navigation.CustomNavigationItem
+import com.supcoder.apksigner.ui.component.navigation.NavigationConstants
+import com.supcoder.apksigner.ui.component.navigation.SimpleNavigationItem
 import com.supcoder.apksigner.vm.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
@@ -109,12 +103,12 @@ fun MainContentScreen(viewModel: MainViewModel) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var isCollapsed = remember { mutableStateOf(true) }
+    var isCollapsed = remember { mutableStateOf(false) }
 
-    val railWidth = if (isCollapsed.value) 42.dp else 80.dp
+    val railWidth = NavigationConstants.navigationRailItemWidth(isCollapsed.value)
     val animatedWidth by animateDpAsState(targetValue = railWidth)
 
-    val iconSize = if (isCollapsed.value) 16.dp else 24.dp
+    val iconSize = NavigationConstants.iconSize(isCollapsed.value)
     val animatedIconSize by animateDpAsState(targetValue = iconSize)
 
     scope.launch {
@@ -158,10 +152,15 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                         }
                                     }, state = rememberTooltipState(), enableUserInput = viewModel.uiPageIndex != page
                                 ) {
-//                                    NavigationRailItem(
-                                        CustomNavigationItem(
-//                                    NavigationItem(
-                                        label = { if (!isCollapsed.value) Text(page.title, style = MaterialTheme.typography.labelSmall) },
+//                                    SimpleNavigationItem(
+                                    SimpleNavigationItem(
+                                        label = {
+                                            if (!isCollapsed.value) Text(
+                                                page.title,
+                                                style = MaterialTheme.typography.labelMedium,
+                                                maxLines = 1
+                                            )
+                                        },
                                         icon = {
                                             Icon(
                                                 page.icon,
@@ -172,7 +171,7 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                         selected = viewModel.uiPageIndex == page,
                                         onClick = { viewModel.updateUiState(page) },
                                         alwaysShowLabel = false,
-
+                                        isCollapsed = isCollapsed.value
                                     )
                                 }
                             }

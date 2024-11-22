@@ -13,8 +13,6 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRailItemColors
-import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,16 +41,13 @@ import androidx.compose.ui.util.fastFirstOrNull
 import kotlin.math.roundToInt
 
 /**
- * CustomNavigationItem
+ * SimpleNavigationItem
  *
  * @author lee
  * @date 2024/11/22
  */
-
-
-
 @Composable
-fun CustomNavigationItem(
+fun SimpleNavigationItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
@@ -60,16 +55,15 @@ fun CustomNavigationItem(
     enabled: Boolean = true,
     label: @Composable (() -> Unit)? = null,
     alwaysShowLabel: Boolean = true,
-    colors: NavigationItemColors = NavigationConstants.colors(),
+    isCollapsed: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
 ) {
     @Suppress("NAME_SHADOWING")
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     val styledIcon =
         @Composable {
-            val iconColor by
-            animateColorAsState(
-                targetValue = colors.iconColor(selected = selected, enabled = enabled),
+            val iconColor by animateColorAsState(
+                targetValue = LocalContentColor.current,
                 animationSpec = tween(NavigationConstants.ItemAnimationDurationMillis)
             )
             // If there's a label, don't have a11y services repeat the icon description.
@@ -85,7 +79,7 @@ fun CustomNavigationItem(
                 val style = MaterialTheme.typography.labelMedium
                 val textColor by
                 animateColorAsState(
-                    targetValue = colors.textColor(selected = selected, enabled = enabled),
+                    targetValue = LocalContentColor.current,
                     animationSpec = tween(NavigationConstants.ItemAnimationDurationMillis)
                 )
                 ProvideContentColorTextStyle(
@@ -107,7 +101,7 @@ fun CustomNavigationItem(
                 indication = null,
             )
             .defaultMinSize(minHeight = NavigationConstants.NavigationRailItemHeight)
-            .widthIn(min = NavigationConstants.NavigationRailItemWidth),
+            .widthIn(min = NavigationConstants.navigationRailItemWidth(isCollapsed)),
         contentAlignment = Alignment.Center,
         propagateMinConstraints = true,
     ) {
@@ -122,8 +116,8 @@ fun CustomNavigationItem(
         // the indicator.
         val deltaOffset: Offset
         with(LocalDensity.current) {
-            val itemWidth = NavigationConstants.NavigationRailItemWidth.roundToPx()
-            val indicatorWidth = NavigationConstants.ActiveIndicatorWidth.roundToPx()
+            val itemWidth = NavigationConstants.navigationRailItemWidth(isCollapsed).roundToPx()
+            val indicatorWidth = NavigationConstants.activeIndicatorWidth(isCollapsed).roundToPx()
             deltaOffset = Offset((itemWidth - indicatorWidth).toFloat() / 2, 0f)
         }
         val offsetInteractionSource =
@@ -131,7 +125,7 @@ fun CustomNavigationItem(
                 MappedInteractionSource(interactionSource, deltaOffset)
             }
 
-        val indicatorShape = RoundedCornerShape(24.dp)
+        val indicatorShape = RoundedCornerShape(18.dp)
 
         // The indicator has a width-expansion animation which interferes with the timing of the
         // ripple, which is why they are separate composables
@@ -140,8 +134,10 @@ fun CustomNavigationItem(
                 Box(
                     Modifier.layoutId(NavigationConstants.IndicatorRippleLayoutIdTag)
                         .clip(indicatorShape)
-                        .indication(offsetInteractionSource,
-                            indication = ripple())
+                        .indication(
+                            offsetInteractionSource,
+                            indication = ripple()
+                        )
                 )
             }
         val indicator =
@@ -149,7 +145,7 @@ fun CustomNavigationItem(
                 Box(
                     Modifier.layoutId(NavigationConstants.IndicatorLayoutIdTag)
                         .graphicsLayer { alpha = animationProgress.value }
-                        .background(color = colors.indicatorColor, shape = indicatorShape)
+                        .background(color = MaterialTheme.colorScheme.secondaryContainer, shape = indicatorShape)
                 )
             }
 
@@ -160,6 +156,7 @@ fun CustomNavigationItem(
             label = styledLabel,
             alwaysShowLabel = alwaysShowLabel,
             animationProgress = { animationProgress.value },
+            isCollapsed = isCollapsed
         )
     }
 }
@@ -172,6 +169,7 @@ private fun NavigationRailItemLayout(
     label: @Composable (() -> Unit)?,
     alwaysShowLabel: Boolean,
     animationProgress: () -> Float,
+    isCollapsed: Boolean = false
 ) {
     Layout({
         indicatorRipple()
@@ -194,7 +192,7 @@ private fun NavigationRailItemLayout(
         val iconPlaceable =
             measurables.fastFirst { it.layoutId == NavigationConstants.IconLayoutIdTag }.measure(looseConstraints)
 
-        val totalIndicatorWidth = iconPlaceable.width + (NavigationConstants.IndicatorHorizontalPadding * 2).roundToPx()
+        val totalIndicatorWidth = iconPlaceable.width + (NavigationConstants.indicatorHorizontalPadding(isCollapsed = isCollapsed) * 2).roundToPx()
         val animatedIndicatorWidth = (totalIndicatorWidth * animationProgress).roundToInt()
         val indicatorVerticalPadding =
             if (label == null) {
