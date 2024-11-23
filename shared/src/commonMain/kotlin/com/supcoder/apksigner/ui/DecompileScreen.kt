@@ -23,8 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.manager.NurseManager
 import com.supcoder.apksigner.model.EditorType
 import com.supcoder.apksigner.model.ThemeConfig
-import com.supcoder.apksigner.theme.codeBackgroundColor
-import com.supcoder.apksigner.theme.coderBarColor
+import com.supcoder.apksigner.theme.editorBackground
+import com.supcoder.apksigner.theme.editorBarBackground
+import com.supcoder.apksigner.theme.editorRootBackground
 import com.supcoder.apksigner.ui.decompile.drag.DropHerePanel
 import com.supcoder.apksigner.ui.decompile.panel.EditPanel
 import com.supcoder.apksigner.ui.decompile.panel.ImagePanel
@@ -64,9 +65,9 @@ fun DecompileScreen(
 
     Column(
         modifier = Modifier.fillMaxSize()
-            .clip(RoundedCornerShape(1.dp))
-            .border(width = 2.dp, color = Color(0xff393b40), shape = RoundedCornerShape(1.dp))
-            .background(color = codeBackgroundColor(isDark = isDarkTheme)),
+            .clip(RoundedCornerShape(2.dp))
+            .border(width = 1.dp, color = editorRootBackground(isDarkTheme), shape = RoundedCornerShape(2.dp))
+            .background(color = editorRootBackground(isDark = isDarkTheme)),
         verticalArrangement = Arrangement.spacedBy(1.dp)
     ) {
 
@@ -126,7 +127,7 @@ fun DecompileScreen(
                                     editorTitleTabAction = editorViewModel.editorTitleTabAction
                                 )
 
-                                Divider(modifier = Modifier.fillMaxWidth().height(1.dp), color = coderBarColor(isDarkTheme))
+                                Divider(modifier = Modifier.fillMaxWidth().height(1.dp), color = editorBarBackground(isDarkTheme))
 
                                 when (editorViewModel.editorType.value) {
                                     is EditorType.TEXT -> {
@@ -135,7 +136,7 @@ fun DecompileScreen(
                                             isDarkTheme,
                                             modifier = Modifier.fillMaxSize()
                                                 .weight(1f)
-                                                .background(color = codeBackgroundColor(isDarkTheme))
+                                                .background(color = editorBackground(isDarkTheme))
                                                 .padding(2.dp),
                                             textContent = (editorViewModel.editorType.value as EditorType.TEXT).textContent,
                                             textType = (editorViewModel.editorType.value as EditorType.TEXT).textType,
@@ -147,7 +148,7 @@ fun DecompileScreen(
                                         ImagePanel(
                                             modifier = Modifier.fillMaxSize()
                                                 .weight(1f)
-                                                .background(color = codeBackgroundColor(isDarkTheme))
+                                                .background(color = editorBackground(isDarkTheme))
                                                 .padding(2.dp),
                                             content = (editorViewModel.editorType.value as EditorType.IMAGE).imagePath
                                         )

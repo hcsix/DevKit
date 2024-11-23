@@ -234,21 +234,42 @@ fun randomComposeColor(): Color {
 }
 
 
+val editorBackground = Color(0xFFFFFFFF) // 白色
+val editorBackgroundDark = Color(0xff1e1f22) // 灰色
+val editorRootBackground = Color(0xFFA6A7AA)
+val editorRootBackgroundDark = Color(0xff393b40)
+
+val editorKeywordColor = Color(0xFF0000FF) // 蓝色
+val editorStringColor = Color(0xFF800000) // 红色
+val editorCommentColor = Color(0xFF3C783C) // 绿色
+val editorNumberColor = Color(0xFF09885A) // 蓝绿色
+val editorSelectedArea = Color(0xFFADD6FF) // 浅蓝色
+val editorErrorMarker = Color(0xFFFF0000) // 红色
+val editorWarningMarker = Color(0xFFFFC600) // 黄色
+val editorWindowBorder = Color(0xFFE6E6E6) // 浅灰色
+
+
 fun codeTextColor(isDark: Boolean): Color {
     return if (isDark) Color(0xFFBCBEC4) else Color(0xFF2B2D30)
 }
 
-fun codeBackgroundColor(isDark: Boolean): Color {
-    return if (isDark) Color(0xff1e1f22) else Color(0xFFE6E6E6)
+fun editorRootBackground(isDark: Boolean): Color {
+    return if (isDark) editorRootBackgroundDark else editorRootBackground
+}
+
+fun editorBackground(isDark: Boolean): Color {
+    return if (isDark) editorBackgroundDark else editorBackground
 }
 
 fun codeKeywordColor(isDark: Boolean): Color {
     return if (isDark) Color(0xFFF5A623) else Color(0xFFF5A623)
 }
 
-fun coderBarColor(isDark: Boolean): Color {
+fun editorBarBackground(isDark: Boolean): Color {
     return if (isDark) Color(0xff2b2d30) else Color(0xFFE6E6E6)
 }
+
+
 
 
 

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.supcoder.apksigner.model.action.LeftBarAction
 import com.supcoder.apksigner.model.state.LeftBarState
-import com.supcoder.apksigner.theme.coderBarColor
+import com.supcoder.apksigner.theme.editorBarBackground
 import com.supcoder.apksigner.theme.size_coder_bar
 import com.supcoder.apksigner.theme.size_coder_bottom_bar
 
@@ -20,7 +20,7 @@ fun BottomBar(
     Row(
         modifier = Modifier.fillMaxWidth()
             .height(size_coder_bottom_bar)
-            .background(color = coderBarColor(isDark))
+            .background(color = editorBarBackground(isDark))
     ) {
 
     }
@@ -35,7 +35,7 @@ fun LeftBar(
     Column(
         modifier = Modifier.fillMaxHeight()
             .width(size_coder_bar)
-            .background(color = coderBarColor(isDark = isDark))
+            .background(color = editorBarBackground(isDark = isDark))
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -54,7 +54,7 @@ fun RightBar(
     Column(
         modifier = Modifier.fillMaxHeight()
             .width(size_coder_bar)
-            .background(color = coderBarColor(isDark = isDark))
+            .background(color = editorBarBackground(isDark = isDark))
     ) {
 
     }

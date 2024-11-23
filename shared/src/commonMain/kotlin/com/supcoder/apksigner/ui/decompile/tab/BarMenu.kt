@@ -38,7 +38,7 @@ fun BarMenu(
             .clip(RoundedCornerShape(corner_normal))
             .background(
                 color = if (selected) {
-                    Color(0xff3266cc)
+                    Color(0xffADD6FF)
                 } else {
                     Color.Transparent
                 }

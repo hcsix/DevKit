@@ -10,8 +10,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowCircleRight
-import androidx.compose.material.icons.rounded.ArrowDownward
-import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowRight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -28,7 +26,7 @@ import com.supcoder.apksigner.model.ProjectTreeType
 import com.supcoder.apksigner.model.action.ProjectPanelAction
 import com.supcoder.apksigner.model.state.ProjectPanelState
 import com.supcoder.apksigner.model.FileItemInfo
-import com.supcoder.apksigner.theme.coderBarColor
+import com.supcoder.apksigner.theme.editorBarBackground
 import com.supcoder.apksigner.ui.decompile.scroll.ScrollPanel
 import com.supcoder.apksigner.util.getResByFileItem
 
@@ -53,7 +51,7 @@ fun ProjectPanel(
         Row(
             modifier = Modifier.fillMaxWidth()
                 .height(40.dp)
-                .background(color = coderBarColor(isDark = isDark))
+                .background(color = editorBarBackground(isDark = isDark))
                 .clickable { projectPanelAction.onProjectTreeTypeClick(projectPanelState.projectTreeType) }
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -95,7 +93,7 @@ fun ProjectPanel(
         // 工程树结构
         ScrollPanel(
             modifier = Modifier.weight(1f)
-                .background(color = coderBarColor(isDark))
+                .background(color = editorBarBackground(isDark))
                 .padding(2.dp),
             horizontalScrollStateAdapter = rememberScrollbarAdapter(horizontalScrollState),
             verticalScrollStateAdapter = rememberScrollbarAdapter(verticalScrollState)

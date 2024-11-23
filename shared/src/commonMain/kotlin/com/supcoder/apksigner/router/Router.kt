@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 //    SET_UP(Res.string.settings, Icons.Rounded.Settings)
 //}
 enum class Page(val title: String, val icon: ImageVector) {
-    SIGNATURE_INFORMATION("签名信息", Icons.Rounded.Description),
-    APK_DECOMPILE("APK反编译", Icons.Rounded.Factory),
+    APK_DECOMPILE("反编译", Icons.Rounded.Factory),
     JSON_FORMAT("Json处理", Icons.Rounded.FormatSize),
+    SIGNATURE_INFORMATION("签名信息", Icons.Rounded.Description),
     APK_INFORMATION("APK信息", Icons.Rounded.Android),
     APK_SIGNATURE("APK签名", Icons.Rounded.Pin),
     SIGNATURE_GENERATION("生成签名", Icons.Rounded.Key),
