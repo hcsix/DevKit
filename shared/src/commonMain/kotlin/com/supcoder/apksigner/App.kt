@@ -6,9 +6,11 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.DrawerValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,12 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -47,15 +51,19 @@ import com.supcoder.apksigner.theme.AppTheme
 import com.supcoder.apksigner.ui.ApkInformation
 import com.supcoder.apksigner.ui.ApkSignature
 import com.supcoder.apksigner.ui.DecompileScreen
-import com.supcoder.apksigner.ui.JsonScreen
+import com.supcoder.apksigner.ui.ModalNavigationDrawerWithLeftLayout
 import com.supcoder.apksigner.ui.SettingsScreen
 import com.supcoder.apksigner.ui.SignatureGeneration
 import com.supcoder.apksigner.ui.SignatureInformation
 import com.supcoder.apksigner.ui.component.DarkModeToggleButton
 import com.supcoder.apksigner.ui.component.navigation.NavigationConstants
 import com.supcoder.apksigner.ui.component.navigation.SimpleNavigationItem
+import com.supcoder.apksigner.util.logger
 import com.supcoder.apksigner.vm.MainViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -97,7 +105,7 @@ suspend fun collectOutputPath(viewModel: MainViewModel) {
 /**
  * 主要模块
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, FlowPreview::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MainContentScreen(viewModel: MainViewModel) {
     val scope = rememberCoroutineScope()
@@ -111,14 +119,30 @@ fun MainContentScreen(viewModel: MainViewModel) {
     val iconSize = NavigationConstants.iconSize(isCollapsed.value)
     val animatedIconSize by animateDpAsState(targetValue = iconSize)
 
+    var drawerState = rememberDrawerState(DrawerValue.Closed)
+
+
+    val events = remember { MutableSharedFlow<Int>() }
+
+    // 收集 events 流，并在 150 毫秒内只处理最后一次事件
+    LaunchedEffect(events) {
+        events.debounce(150).collect {
+            if (drawerState.isClosed) {
+                drawerState.open()
+            }
+        }
+    }
+
     scope.launch {
         collectOutputPath(viewModel)
     }
+
     Scaffold(snackbarHost = {
         SnackbarHost(hostState = snackbarHostState)
     }) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.TopCenter
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            contentAlignment = Alignment.TopCenter
         ) {
             Row(
                 modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically
@@ -138,7 +162,6 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                 contentDescription = "Collapse/Expand"
                             )
                         }
-
                         Column(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.Center,
@@ -152,8 +175,8 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                         }
                                     }, state = rememberTooltipState(), enableUserInput = viewModel.uiPageIndex != page
                                 ) {
-//                                    SimpleNavigationItem(
                                     SimpleNavigationItem(
+                                        tag = page.tag,
                                         label = {
                                             if (!isCollapsed.value) Text(
                                                 page.title,
@@ -171,22 +194,30 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                         selected = viewModel.uiPageIndex == page,
                                         onClick = { viewModel.updateUiState(page) },
                                         alwaysShowLabel = false,
-                                        isCollapsed = isCollapsed.value
+                                        isCollapsed = isCollapsed.value,
+                                        onHover = { isHovered, tag ->
+                                            logger("${page.title} isHovered -> $isHovered")
+                                            if (isHovered) {
+                                                scope.launch {
+                                                    events.emit(value = tag)
+                                                }
+                                            }
+                                        }
                                     )
                                 }
                             }
                         }
                         DarkModeToggleButton(viewModel, isCollapsed)
                     }
-
-
                 }
                 // 主界面
                 val content: @Composable (Page) -> Unit = { page ->
                     when (page) {
 //                        Page.SIGNATURE_INFORMATION -> HomeScreen {  }
                         Page.SIGNATURE_INFORMATION -> SignatureInformation(viewModel)
-                        Page.JSON_FORMAT -> JsonScreen(viewModel)
+//                        Page.JSON_FORMAT -> JsonScreen(viewModel)
+//                        Page.JSON_FORMAT -> DrawerScreen(drawerState)
+                        Page.JSON_FORMAT -> ModalNavigationDrawerWithLeftLayout()
                         Page.APK_DECOMPILE -> DecompileScreen(viewModel)
                         Page.APK_INFORMATION -> ApkInformation(viewModel)
                         Page.APK_SIGNATURE -> ApkSignature(viewModel)
@@ -195,10 +226,13 @@ fun MainContentScreen(viewModel: MainViewModel) {
                         else -> SettingsScreen(viewModel)
                     }
                 }
-                // 淡入淡出切换页面
+
+
                 Crossfade(
                     targetState = viewModel.uiPageIndex, modifier = Modifier.fillMaxSize(), content = content
                 )
+
+
             }
         }
     }
@@ -224,11 +258,8 @@ private fun rememberRichTooltipPositionProvider(): PopupPositionProvider {
                 anchorBounds: IntRect, windowSize: IntSize, layoutDirection: LayoutDirection, popupContentSize: IntSize
             ): IntOffset {
                 var x = anchorBounds.right
-                // Try to shift it to the left of the anchor
-                // if the tooltip would collide with the right side of the screen
                 if (x + popupContentSize.width > windowSize.width) {
                     x = anchorBounds.left - popupContentSize.width
-                    // Center if it'll also collide with the left side of the screen
                     if (x < 0) x = anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2
                 }
                 x -= tooltipAnchorSpacing
@@ -238,3 +269,5 @@ private fun rememberRichTooltipPositionProvider(): PopupPositionProvider {
         }
     }
 }
+
+

@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
@@ -16,14 +17,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
@@ -46,8 +50,10 @@ import kotlin.math.roundToInt
  * @author lee
  * @date 2024/11/22
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SimpleNavigationItem(
+    tag: Int,
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
@@ -57,9 +63,24 @@ fun SimpleNavigationItem(
     alwaysShowLabel: Boolean = true,
     isCollapsed: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
+    onHover: (Boolean, Int) -> Unit
 ) {
     @Suppress("NAME_SHADOWING")
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is HoverInteraction.Enter -> {
+                    onHover(true,tag) // You can pass the actual hover position if needed
+                }
+//                is HoverInteraction.Exit -> {
+//                    onHover(false,tag) // You can pass the actual hover position if needed
+//                }
+            }
+        }
+    }
+
     val styledIcon =
         @Composable {
             val iconColor by animateColorAsState(

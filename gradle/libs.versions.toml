@@ -48,6 +48,7 @@ asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "logging" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }

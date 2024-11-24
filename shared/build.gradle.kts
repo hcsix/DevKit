@@ -33,6 +33,7 @@ kotlin {
                 implementation(libs.asm)
                 implementation(libs.lifecycle.viewmodel.compose)
                 runtimeOnly(libs.kotlinx.coroutines.swing)
+                implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.jna)
                 implementation("com.android.tools:sdk-common:31.7.2") {
 //                    exclude(group = "org.bouncycastle", module = "bcpkix-jdk18on")
