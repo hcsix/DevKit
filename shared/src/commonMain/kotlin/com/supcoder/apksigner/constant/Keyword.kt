@@ -70,3 +70,22 @@ val keywordList = listOf(
     "goto",
     "const",
 )
+
+val kotlinKeywordList = listOf(
+    "as", "as?", "is", "in", "!in",
+    "break", "continue", "return", "throw",
+    "class", "object", "interface", "companion", "data", "enum", "sealed", "inline", "inner", "annotation",
+    "fun", "val", "var", "typealias", "operator", "infix", "tailrec", "external", "suspend",
+    "if", "else", "when", "try", "catch", "finally", "for", "while", "do",
+    "true", "false", "null",
+    "package", "import", "as", "fun", "val", "var", "typealias",
+    "file", "field", "property", "get", "set", "receiver", "param", "delegate",
+    "by", "it", "this", "super", "dynamic",
+    "reified", "crossinline", "noinline",
+    "out", "in", "vararg", " typealias", "where",
+    "override", "open", "final", "abstract", "sealed", "inner", "data", "inline", "external", "tailrec", "suspend", "operator", "infix",
+    "private", "protected", "public", "internal",
+    "const", "lateinit",
+    "suspend",
+    "yield"
+)

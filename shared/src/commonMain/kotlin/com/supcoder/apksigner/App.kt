@@ -42,6 +42,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.supcoder.apksigner.model.ThemeConfig
@@ -163,8 +164,8 @@ fun MainContentScreen(viewModel: MainViewModel) {
                         LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
                             items(itemsList) { item ->
                                 NavigationDrawerItem(
-                                    label = { Text(item.title) },
-                                    selected = false,
+                                    label = { Text(item.title, fontSize = 14.sp) },
+                                    selected = (drawerNavTag.value == item.navTag),
                                     onClick = {
                                         scope.launch {
                                             drawerState.close()
@@ -172,6 +173,7 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                             viewModel.updateUiState(item.page)
                                         }
                                     }
+                                    , modifier = Modifier.padding(bottom = 8.dp).height(48.dp)
                                 )
 
                             }

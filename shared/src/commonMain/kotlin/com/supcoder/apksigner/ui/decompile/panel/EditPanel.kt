@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -16,8 +17,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.supcoder.apksigner.theme.codeTextColor
 import com.supcoder.apksigner.manager.transfer.JavaKeywordVisualTransformation
+import com.supcoder.apksigner.manager.transfer.KotlinKeywordVisualTransformation
 import com.supcoder.apksigner.ui.decompile.scroll.ScrollPanel
-import com.supcoder.apksigner.vm.MainViewModel
 
 
 /**
@@ -49,27 +50,31 @@ fun EditPanel(
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = Color.White,
+                cursorColor = Color.Transparent,
                 errorCursorColor = Color.Red,
                 backgroundColor = Color.Transparent,
-
-                ),
+            ),
             textStyle = TextStyle(
                 color = codeTextColor(isDark),
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
                 fontFamily = FontFamily.Monospace
             ),
             modifier = Modifier.fillMaxSize()
                 .verticalScroll(verticalScrollState)
                 .horizontalScroll(horizontalScrollState),
             onValueChange = {},
-            visualTransformation = if (textType == "java") {
-                JavaKeywordVisualTransformation
-            } else {
-                VisualTransformation.None
+            visualTransformation = when (textType) {
+                "java" -> {
+                    JavaKeywordVisualTransformation
+                }
+                "kotlin" -> {
+                    KotlinKeywordVisualTransformation
+                }
+                else -> {
+                    VisualTransformation.None
+                }
             }
         )
-
     }
 }
