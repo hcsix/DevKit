@@ -9,6 +9,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -123,7 +126,8 @@ private fun TitleTabItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Image(
-                painter = painterResource(resourcePath = getResByFileItem(fileItemInfo)),
+                imageVector = Icons.Rounded.Folder,
+//                painter = painterResource(resourcePath = getResByFileItem(fileItemInfo)),
                 contentDescription = "",
                 modifier = Modifier.size(14.dp)
             )
@@ -142,7 +146,8 @@ private fun TitleTabItem(
             )
 
             Image(
-                painter = painterResource("icons/icon_tab_close.svg"),
+//                painter = painterResource("icons/icon_tab_close.svg"),
+                imageVector = Icons.Filled.Close,
                 contentDescription = "",
                 modifier = Modifier.size(18.dp)
                     .clickable {

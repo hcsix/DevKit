@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupPositionProvider
 import com.supcoder.apksigner.file.FileSelectorType
 import com.supcoder.apksigner.model.ThemeConfig
+import com.supcoder.apksigner.util.LottieAnimation
 import com.supcoder.apksigner.util.checkFile
 import com.supcoder.apksigner.util.toFileExtensions
 import com.supcoder.apksigner.vm.MainViewModel

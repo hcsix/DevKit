@@ -16,17 +16,19 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.supcoder.apksigner.file.FileSelectorType
 import com.supcoder.apksigner.manager.NurseManager
 import com.supcoder.apksigner.model.EditorType
 import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.theme.editorBackground
 import com.supcoder.apksigner.theme.editorBarBackground
 import com.supcoder.apksigner.theme.editorRootBackground
-import com.supcoder.apksigner.ui.decompile.drag.DropHerePanel
+import com.supcoder.apksigner.ui.component.DropFilePanel
 import com.supcoder.apksigner.ui.decompile.panel.EditPanel
 import com.supcoder.apksigner.ui.decompile.panel.ImagePanel
 import com.supcoder.apksigner.ui.decompile.panel.ProjectPanel
@@ -34,6 +36,7 @@ import com.supcoder.apksigner.ui.decompile.tab.BottomBar
 import com.supcoder.apksigner.ui.decompile.tab.EditorTitleTab
 import com.supcoder.apksigner.ui.decompile.tab.LeftBar
 import com.supcoder.apksigner.ui.decompile.tab.RightBar
+import com.supcoder.apksigner.util.logger
 import com.supcoder.apksigner.vm.DragViewModel
 import com.supcoder.apksigner.vm.EditorViewModel
 import com.supcoder.apksigner.vm.LeftBarViewModel
@@ -62,6 +65,8 @@ fun DecompileScreen(
         ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
         else -> false
     }
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -103,13 +108,17 @@ fun DecompileScreen(
                     when (editorViewModel.editorType.value) {
                         is EditorType.NONE -> {
                             // 拖动文件到此
-                            DropHerePanel(
-                                modifier = Modifier.fillMaxSize()
-                                    .weight(1f),
-//                                composeWindow = composeWindow,
-                                onFileDrop = {
+                            DropFilePanel(
+                                scope = scope,
+                                onFileSelector = {
+                                    if (it.isNotEmpty()) {
+                                        logger("onFileSelector:path is $it")
+                                    }
                                     dragViewModel.dragAction.onFileDrop(it)
-                                }
+                                },
+                                fileSelectorType = arrayOf(
+                                    FileSelectorType.APK
+                                )
                             )
                         }
 
@@ -127,7 +136,10 @@ fun DecompileScreen(
                                     editorTitleTabAction = editorViewModel.editorTitleTabAction
                                 )
 
-                                Divider(modifier = Modifier.fillMaxWidth().height(1.dp), color = editorBarBackground(isDarkTheme))
+                                Divider(
+                                    modifier = Modifier.fillMaxWidth().height(1.dp),
+                                    color = editorBarBackground(isDarkTheme)
+                                )
 
                                 when (editorViewModel.editorType.value) {
                                     is EditorType.TEXT -> {

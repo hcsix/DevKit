@@ -11,24 +11,23 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowCircleRight
 import androidx.compose.material.icons.rounded.ArrowRight
+import androidx.compose.material.icons.rounded.Javascript
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.supcoder.apksigner.manager.NurseManager
+import com.supcoder.apksigner.model.FileItemInfo
 import com.supcoder.apksigner.model.ProjectTreeType
 import com.supcoder.apksigner.model.action.ProjectPanelAction
 import com.supcoder.apksigner.model.state.ProjectPanelState
-import com.supcoder.apksigner.model.FileItemInfo
 import com.supcoder.apksigner.theme.editorBarBackground
 import com.supcoder.apksigner.ui.decompile.scroll.ScrollPanel
-import com.supcoder.apksigner.util.getResByFileItem
 
 /**
  * Project 面板相关UI
@@ -108,7 +107,7 @@ fun ProjectPanel(
                 itemsIndexed(
                     items = projectPanelState.showedTreeList,
                     key = { index, item ->
-//                        FileItemInfo.parent + FileItemInfo.name
+                         item.parent + item.name
                     }
                 ) { index, item ->
                     ProjectItem(
@@ -158,7 +157,8 @@ private fun ProjectItem(
         }
 
         Image(
-            painter = painterResource(resourcePath = getResByFileItem(item)),
+//            painter = painterResource(resourcePath = getResByFileItem(item)),
+            imageVector = Icons.Rounded.Javascript,
             contentDescription = "",
             modifier = Modifier.size(16.dp)
         )

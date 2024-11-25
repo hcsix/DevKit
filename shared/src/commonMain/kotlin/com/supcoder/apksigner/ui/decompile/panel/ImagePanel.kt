@@ -5,6 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ZoomIn
+import androidx.compose.material.icons.filled.ZoomOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +50,8 @@ fun ImagePanel(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource("icons/icon_zoom_in.svg"),
+//                painter = painterResource("icons/icon_zoom_in.svg"),
+                imageVector = Icons.Filled.ZoomIn,
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
                     .clip(RoundedCornerShape(4.dp))
@@ -60,7 +64,8 @@ fun ImagePanel(
             )
 
             Image(
-                painter = painterResource("icons/icon_zoom_out.svg"),
+//                painter = painterResource("icons/icon_zoom_out.svg"),
+                imageVector = Icons.Filled.ZoomOut,
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
                     .clip(RoundedCornerShape(4.dp))

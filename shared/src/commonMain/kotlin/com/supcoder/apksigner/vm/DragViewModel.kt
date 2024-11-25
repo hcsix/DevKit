@@ -23,11 +23,8 @@ class DragViewModel {
     /**
      * 拖拽的文件
      */
-    private fun onDragFile(files: List<File>) {
-
-        val apk = files.firstOrNull() {
-            it.name.endsWith(".apk")
-        } ?: return
+    private fun onDragFile(filePath: String) {
+        val apk = File(filePath)
 
         ioScope.launch {
             try {
