@@ -26,3 +26,4 @@ enum class Page(val title: String, val icon: ImageVector,val tag: Int) {
     SIGNATURE_GENERATION("生成签名", Icons.Rounded.Key,5),
     SETTINGS("设置", Icons.Rounded.Settings,6)
 }
+

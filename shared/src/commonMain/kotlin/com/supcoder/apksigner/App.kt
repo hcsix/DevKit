@@ -6,15 +6,16 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.DrawerValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
-import androidx.compose.material.rememberDrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
@@ -24,6 +25,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +37,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -48,10 +53,11 @@ import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.platform.createFlowSettings
 import com.supcoder.apksigner.router.Page
 import com.supcoder.apksigner.theme.AppTheme
+import com.supcoder.apksigner.theme.with_drawer
 import com.supcoder.apksigner.ui.ApkInformation
 import com.supcoder.apksigner.ui.ApkSignature
 import com.supcoder.apksigner.ui.DecompileScreen
-import com.supcoder.apksigner.ui.ModalNavigationDrawerWithLeftLayout
+import com.supcoder.apksigner.ui.JsonScreen
 import com.supcoder.apksigner.ui.SettingsScreen
 import com.supcoder.apksigner.ui.SignatureGeneration
 import com.supcoder.apksigner.ui.SignatureInformation
@@ -121,14 +127,19 @@ fun MainContentScreen(viewModel: MainViewModel) {
 
     var drawerState = rememberDrawerState(DrawerValue.Closed)
 
+    val drawerNavPage = remember { mutableStateOf(Page.JSON_FORMAT.tag) }
 
     val events = remember { MutableSharedFlow<Int>() }
 
     // 收集 events 流，并在 150 毫秒内只处理最后一次事件
     LaunchedEffect(events) {
-        events.debounce(150).collect {
-            if (drawerState.isClosed) {
+        events.debounce(150).collect { it ->
+            if (drawerState.isClosed and ((it >= 1) and (it <= 5))) {
                 drawerState.open()
+                drawerNavPage.value = it
+            }
+            if (drawerState.isOpen and ((it < 1) or (it > 5))){
+                drawerState.close()
             }
         }
     }
@@ -141,98 +152,105 @@ fun MainContentScreen(viewModel: MainViewModel) {
         SnackbarHost(hostState = snackbarHostState)
     }) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
-            contentAlignment = Alignment.TopCenter
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically
-            ) {
-                val pages = Page.entries.toMutableList()
-                // 导航栏
-                NavigationRail(Modifier.fillMaxHeight().width(animatedWidth)) {
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        IconButton(onClick = { isCollapsed.value = !isCollapsed.value }) {
-                            Icon(
-//                                imageVector = if (isCollapsed.value) Icons.Filled.ArrowForwardIos else Icons.Filled.ArrowBackIosNew,
-                                imageVector = if (isCollapsed.value) Icons.Filled.Menu
-                                else Icons.Filled.MenuOpen,
-                                contentDescription = "Collapse/Expand"
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            pages.forEachIndexed { _, page ->
-                                TooltipBox(
-                                    positionProvider = rememberRichTooltipPositionProvider(), tooltip = {
-                                        PlainTooltip {
-                                            Text(page.title, style = MaterialTheme.typography.bodySmall)
-                                        }
-                                    }, state = rememberTooltipState(), enableUserInput = viewModel.uiPageIndex != page
-                                ) {
-                                    SimpleNavigationItem(
-                                        tag = page.tag,
-                                        label = {
-                                            if (!isCollapsed.value) Text(
-                                                page.title,
-                                                style = MaterialTheme.typography.labelMedium,
-                                                maxLines = 1
-                                            )
-                                        },
-                                        icon = {
-                                            Icon(
-                                                page.icon,
-                                                contentDescription = page.title,
-                                                modifier = Modifier.size(animatedIconSize)
-                                            )
-                                        },
-                                        selected = viewModel.uiPageIndex == page,
-                                        onClick = { viewModel.updateUiState(page) },
-                                        alwaysShowLabel = false,
-                                        isCollapsed = isCollapsed.value,
-                                        onHover = { isHovered, tag ->
-                                            logger("${page.title} isHovered -> $isHovered")
-                                            if (isHovered) {
-                                                scope.launch {
-                                                    events.emit(value = tag)
-                                                }
-                                            }
-                                        }
-                                    )
-                                }
+            val pages = Page.entries.toMutableList()
+            val content: @Composable (Page) -> Unit = { page ->
+                when (page) {
+                    Page.SIGNATURE_INFORMATION -> SignatureInformation(viewModel)
+                    Page.JSON_FORMAT -> JsonScreen(viewModel)
+                    Page.APK_DECOMPILE -> DecompileScreen(viewModel)
+                    Page.APK_INFORMATION -> ApkInformation(viewModel)
+                    Page.APK_SIGNATURE -> ApkSignature(viewModel)
+                    Page.SIGNATURE_GENERATION -> SignatureGeneration(viewModel)
+                    Page.SETTINGS -> SettingsScreen(viewModel)
+                    else -> SettingsScreen(viewModel)
+                }
+            }
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet(modifier = Modifier.width(with_drawer)) {
+                        Spacer(Modifier.height(12.dp))
+                        Text("ModalDrawerSheet content", modifier = Modifier.padding(16.dp))
+                    }
+                },
+                content = {
+                    Crossfade(
+                        targetState = viewModel.uiPageIndex, modifier = Modifier.fillMaxSize(), content = content
+                    )
+                }, gesturesEnabled = false,
+                modifier = Modifier.padding(start = animatedWidth).pointerInput(Unit) {
+                    detectMouseMovement { x, y ->
+                        if (x > with_drawer.toPx() && drawerState.isOpen) {
+                            scope.launch {
+                                drawerState.close()
                             }
                         }
-                        DarkModeToggleButton(viewModel, isCollapsed)
                     }
                 }
-                // 主界面
-                val content: @Composable (Page) -> Unit = { page ->
-                    when (page) {
-//                        Page.SIGNATURE_INFORMATION -> HomeScreen {  }
-                        Page.SIGNATURE_INFORMATION -> SignatureInformation(viewModel)
-//                        Page.JSON_FORMAT -> JsonScreen(viewModel)
-//                        Page.JSON_FORMAT -> DrawerScreen(drawerState)
-                        Page.JSON_FORMAT -> ModalNavigationDrawerWithLeftLayout()
-                        Page.APK_DECOMPILE -> DecompileScreen(viewModel)
-                        Page.APK_INFORMATION -> ApkInformation(viewModel)
-                        Page.APK_SIGNATURE -> ApkSignature(viewModel)
-                        Page.SIGNATURE_GENERATION -> SignatureGeneration(viewModel)
-                        Page.SETTINGS -> SettingsScreen(viewModel)
-                        else -> SettingsScreen(viewModel)
+            )
+            // 导航栏
+            NavigationRail(Modifier.fillMaxHeight().width(animatedWidth).align(Alignment.CenterStart)) {
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    IconButton(onClick = { isCollapsed.value = !isCollapsed.value }) {
+                        Icon(
+//                                imageVector = if (isCollapsed.value) Icons.Filled.ArrowForwardIos else Icons.Filled.ArrowBackIosNew,
+                            imageVector = if (isCollapsed.value) Icons.Filled.Menu
+                            else Icons.Filled.MenuOpen,
+                            contentDescription = "Collapse/Expand"
+                        )
                     }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        pages.forEachIndexed { _, page ->
+                            TooltipBox(
+                                positionProvider = rememberRichTooltipPositionProvider(), tooltip = {
+                                    PlainTooltip {
+                                        Text(page.title, style = MaterialTheme.typography.bodySmall)
+                                    }
+                                }, state = rememberTooltipState(), enableUserInput = viewModel.uiPageIndex != page
+                            ) {
+                                SimpleNavigationItem(
+                                    tag = page.tag,
+                                    label = {
+                                        if (!isCollapsed.value) Text(
+                                            page.title,
+                                            style = MaterialTheme.typography.labelMedium,
+                                            maxLines = 1
+                                        )
+                                    },
+                                    icon = {
+                                        Icon(
+                                            page.icon,
+                                            contentDescription = page.title,
+                                            modifier = Modifier.size(animatedIconSize)
+                                        )
+                                    },
+                                    selected = viewModel.uiPageIndex == page,
+                                    onClick = { viewModel.updateUiState(page) },
+                                    alwaysShowLabel = false,
+                                    isCollapsed = isCollapsed.value,
+                                    onHover = { isHovered, tag ->
+                                        logger("${page.title} isHovered -> $isHovered")
+                                        if (isHovered) {
+                                            scope.launch {
+                                                events.emit(value = tag)
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    DarkModeToggleButton(viewModel, isCollapsed)
                 }
-
-
-                Crossfade(
-                    targetState = viewModel.uiPageIndex, modifier = Modifier.fillMaxSize(), content = content
-                )
-
-
             }
         }
     }
@@ -271,3 +289,19 @@ private fun rememberRichTooltipPositionProvider(): PopupPositionProvider {
 }
 
 
+suspend fun PointerInputScope.detectMouseMovement(onMove: (Float, Float) -> Unit) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent()
+            if (event.type == PointerEventType.Move) {
+                val changes = event.changes
+                if (changes.isNotEmpty()) {
+                    val change = changes.first()
+                    val x = change.position.x
+                    val y = change.position.y
+                    onMove(x, y)
+                }
+            }
+        }
+    }
+}
