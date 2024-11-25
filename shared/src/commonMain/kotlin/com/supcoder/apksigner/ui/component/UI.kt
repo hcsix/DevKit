@@ -38,10 +38,15 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.DragData
 import androidx.compose.ui.draganddrop.dragData
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupPositionProvider
 import com.supcoder.apksigner.file.FileSelectorType
 import com.supcoder.apksigner.model.ThemeConfig
 import com.supcoder.apksigner.util.checkFile
@@ -393,4 +398,25 @@ fun dragAndDropTarget(dragging: (Boolean) -> Unit, onFinish: (Result<List<Path>>
         }
     }
     return dragAndDropTarget
+}
+
+@Composable
+fun rememberRichTooltipPositionProvider(): PopupPositionProvider {
+    val tooltipAnchorSpacing = with(LocalDensity.current) { 4.dp.roundToPx() }
+    return remember(tooltipAnchorSpacing) {
+        object : PopupPositionProvider {
+            override fun calculatePosition(
+                anchorBounds: IntRect, windowSize: IntSize, layoutDirection: LayoutDirection, popupContentSize: IntSize
+            ): IntOffset {
+                var x = anchorBounds.right
+                if (x + popupContentSize.width > windowSize.width) {
+                    x = anchorBounds.left - popupContentSize.width
+                    if (x < 0) x = anchorBounds.left + (anchorBounds.width - popupContentSize.width) / 2
+                }
+                x -= tooltipAnchorSpacing
+                val y = anchorBounds.top + (anchorBounds.height - popupContentSize.height) / 2
+                return IntOffset(x, y)
+            }
+        }
+    }
 }

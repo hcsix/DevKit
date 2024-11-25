@@ -256,8 +256,6 @@ private fun Conventional(
                     saveUserData(userData.copy(defaultOutputPath = path))
                     updateApkSignature(viewModel.apkSignatureState.copy(outputPath = outputPath))
                     updateSignatureGenerate(viewModel.keyStoreInfoState.copy(keyStorePath = outputPath))
-                    updateJunkCodeInfo(viewModel.junkCodeInfoState.copy(outputPath = outputPath))
-                    updateIconFactoryInfo(viewModel.iconFactoryInfoState.copy(outputPath = outputPath))
                 }
             })
             Spacer(Modifier.size(18.dp))

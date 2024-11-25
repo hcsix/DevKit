@@ -28,8 +28,8 @@ import com.supcoder.apksigner.vm.MainViewModel
  * @date 2024/11/21
  */
 @Composable
-fun JsonScreen(viewModel: MainViewModel) {
-    var tabIndex by remember { mutableStateOf(0) }
+fun JsonScreen(viewModel: MainViewModel,tabIndex: Int) {
+    var tabIndex by remember { mutableStateOf(tabIndex) }
 
     Scaffold(
         topBar = {

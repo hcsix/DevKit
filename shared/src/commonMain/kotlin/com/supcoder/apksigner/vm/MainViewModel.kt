@@ -79,7 +79,7 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
 
 
     // 主页选中下标
-    private val _uiPageIndex = mutableStateOf(Page.SIGNATURE_INFORMATION)
+    private val _uiPageIndex = mutableStateOf(Page.APK_DECOMPILE)
     val uiPageIndex by _uiPageIndex
 
     fun updateUiState(page: Page) {
@@ -122,9 +122,7 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
     private val _iconFactoryInfoState = mutableStateOf(IconFactoryInfo())
     val iconFactoryInfoState by _iconFactoryInfoState
 
-    // 图标工厂UI状态
-    private val _iconFactoryUIState = mutableStateOf<UIState>(UIState.WAIT)
-    val iconFactoryUIState by _iconFactoryUIState
+
 
     private val _snackbarVisuals = MutableStateFlow(SnackbarVisualsData())
     val snackbarVisuals = _snackbarVisuals.asStateFlow()
@@ -189,23 +187,7 @@ class MainViewModel @OptIn(ExperimentalSettingsApi::class) constructor(settings:
         _keyStoreInfoState.update { keyStoreInfo }
     }
 
-    /**
-     * 修改JunkCodeInfo
-     * @param junkCodeInfo JunkCodeInfo
-     * @see model.JunkCodeInfo
-     */
-    fun updateJunkCodeInfo(junkCodeInfo: JunkCodeInfo) {
-        _junkCodeInfoState.update { junkCodeInfo }
-    }
 
-    /**
-     * 修改IconFactoryInfo
-     * @param iconFactoryInfo IconFactoryInfo
-     * @see model.IconFactoryInfo
-     */
-    fun updateIconFactoryInfo(iconFactoryInfo: IconFactoryInfo) {
-        _iconFactoryInfoState.update { iconFactoryInfo }
-    }
 
     /**
      * APK签名

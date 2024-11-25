@@ -8,7 +8,16 @@ import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.Pin
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.supcoder.apksigner.ui.ApkInformation
+import com.supcoder.apksigner.ui.ApkSignature
+import com.supcoder.apksigner.ui.DecompileScreen
+import com.supcoder.apksigner.ui.JsonScreen
+import com.supcoder.apksigner.ui.SettingsScreen
+import com.supcoder.apksigner.ui.SignatureGeneration
+import com.supcoder.apksigner.ui.SignatureInformation
+import com.supcoder.apksigner.vm.MainViewModel
 
 //enum class Page(val title: StringResource, val icon: ImageVector) {
 //    SIGNATURE_INFORMATION(Res.string.sign_info, Icons.Rounded.Description),
@@ -17,13 +26,52 @@ import androidx.compose.ui.graphics.vector.ImageVector
 //    SIGNATURE_GENERATION(Res.string.gen_sign, Icons.Rounded.Key),
 //    SET_UP(Res.string.settings, Icons.Rounded.Settings)
 //}
-enum class Page(val title: String, val icon: ImageVector,val tag: Int) {
-    APK_DECOMPILE("反编译", Icons.Rounded.Factory,0),
-    JSON_FORMAT("Json处理", Icons.Rounded.FormatSize,1),
-    SIGNATURE_INFORMATION("签名信息", Icons.Rounded.Description,2),
-    APK_INFORMATION("APK信息", Icons.Rounded.Android,3),
-    APK_SIGNATURE("APK签名", Icons.Rounded.Pin,4),
-    SIGNATURE_GENERATION("生成签名", Icons.Rounded.Key,5),
-    SETTINGS("设置", Icons.Rounded.Settings,6)
+enum class Page(val title: String, val icon: ImageVector, val tag: Int) {
+    APK_DECOMPILE("反编译", Icons.Rounded.Factory, 0),
+    APK_INFORMATION("APK信息", Icons.Rounded.Android, 1),
+    JSON_FORMAT("Json处理", Icons.Rounded.FormatSize, 2),
+    APK_SIGNATURE("APK签名", Icons.Rounded.Pin, 3),
+    SETTINGS("设置", Icons.Rounded.Settings, 4)
 }
 
+data class NavItem(val title: String, val page: Page, val navTag: String)
+
+
+@Composable
+fun getContent(viewModel: MainViewModel, page: Page, navTag: String?) {
+    return when (page) {
+        Page.JSON_FORMAT -> when (navTag) {
+            "json_format" -> JsonScreen(viewModel,0)
+            "json_to_model" -> JsonScreen(viewModel,1)
+            else -> JsonScreen(viewModel,0)
+        }
+
+        Page.APK_DECOMPILE -> DecompileScreen(viewModel)
+        Page.APK_INFORMATION -> ApkInformation(viewModel)
+        Page.APK_SIGNATURE -> when (navTag) {
+            "sign_apk" -> ApkSignature(viewModel)
+            "gen_signature" -> SignatureGeneration(viewModel)
+            "sign_info" -> SignatureInformation(viewModel)
+            else -> ApkSignature(viewModel)
+        }
+
+        Page.SETTINGS -> SettingsScreen(viewModel)
+        else -> SettingsScreen(viewModel)
+    }
+}
+
+fun fetchNavList(tag: Int): List<NavItem> {
+    return when (tag) {
+        Page.JSON_FORMAT.tag -> return listOf(
+            NavItem("Json格式化", Page.JSON_FORMAT, "json_format"),
+            NavItem("模型生成", Page.JSON_FORMAT, "json_to_model")
+        )
+
+        Page.APK_SIGNATURE.tag -> return listOf(
+            NavItem("签名APK", Page.APK_SIGNATURE, "sign_apk"),
+            NavItem("生成签名", Page.APK_SIGNATURE, "gen_signature"),
+            NavItem("签名信息", Page.APK_SIGNATURE, "sign_info")
+        )
+        else -> emptyList()
+    }
+}
