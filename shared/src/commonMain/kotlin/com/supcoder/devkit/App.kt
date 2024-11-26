@@ -4,7 +4,6 @@ package com.supcoder.devkit
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -60,8 +59,6 @@ import com.supcoder.devkit.ui.component.rememberRichTooltipPositionProvider
 import com.supcoder.devkit.util.detectMouseMovement
 import com.supcoder.devkit.util.logger
 import com.supcoder.devkit.vm.MainViewModel
-import devkit.shared.generated.resources.Res
-import devkit.shared.generated.resources.icon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -69,7 +66,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import kotlin.math.abs
 
 
@@ -155,11 +151,6 @@ fun MainContentScreen(viewModel: MainViewModel) {
         Box(
             modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
-            Image(
-                painter = painterResource(Res.drawable.icon),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
 
             val pages = Page.entries.toMutableList()
             val content: @Composable (Page) -> Unit = { page ->
@@ -177,7 +168,6 @@ fun MainContentScreen(viewModel: MainViewModel) {
                                     selected = (drawerNavTag.value == item.navTag),
                                     onClick = {
                                         scope.launch {
-                                            drawerState.close()
                                             drawerNavTag.value = item.navTag
                                             viewModel.updateUiState(item.page)
                                         }

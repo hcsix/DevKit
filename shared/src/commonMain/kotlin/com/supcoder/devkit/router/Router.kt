@@ -15,6 +15,7 @@ import com.supcoder.devkit.ui.JsonScreen
 import com.supcoder.devkit.ui.SettingsScreen
 import com.supcoder.devkit.ui.SignatureGeneration
 import com.supcoder.devkit.ui.SignatureInformation
+import com.supcoder.devkit.ui.component.codeviewer.MainView
 import com.supcoder.devkit.vm.MainViewModel
 
 //enum class Page(val title: StringResource, val icon: ImageVector) {
@@ -44,7 +45,8 @@ fun getContent(viewModel: MainViewModel, page: Page, navTag: String?) {
             else -> JsonScreen(viewModel,0)
         }
 
-        Page.APK_DECOMPILE -> DecompileScreen(viewModel)
+//        Page.APK_DECOMPILE -> DecompileScreen(viewModel)
+        Page.APK_DECOMPILE -> MainView()
         Page.APK_INFORMATION -> ApkInformation(viewModel)
         Page.APK_SIGNATURE -> when (navTag) {
             "sign_apk" -> ApkSignature(viewModel)

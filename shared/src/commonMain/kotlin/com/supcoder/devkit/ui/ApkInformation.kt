@@ -37,6 +37,7 @@ import com.supcoder.devkit.ui.component.FileButton
 import com.supcoder.devkit.ui.component.LoadingAnimate
 import com.supcoder.devkit.ui.component.UploadAnimate
 import com.supcoder.devkit.ui.component.dragAndDropTarget
+import com.supcoder.devkit.util.LottieAnimation
 import com.supcoder.devkit.util.copy
 import com.supcoder.devkit.util.formatFileSize
 import com.supcoder.devkit.util.isApk
@@ -76,11 +77,11 @@ private fun ApkInformationLottie(viewModel: MainViewModel, scope: CoroutineScope
     Box(
         modifier = Modifier.padding(6.dp), contentAlignment = Alignment.Center
     ) {
-//        if (useDarkTheme) {
-//            LottieAnimation(scope, "files/lottie_main_2_dark.json")
-//        } else {
-//            LottieAnimation(scope, "files/lottie_main_2_light.json")
-//        }
+        if (useDarkTheme) {
+            LottieAnimation(scope, "files/lottie_main_2_dark.json")
+        } else {
+            LottieAnimation(scope, "files/lottie_main_2_light.json")
+        }
     }
 }
 

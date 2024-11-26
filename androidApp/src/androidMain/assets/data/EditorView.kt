@@ -22,8 +22,7 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.unit.dp
 import org.jetbrains.codeviewer.platform.SelectionContainer
 import org.jetbrains.codeviewer.ui.common.AppTheme
-import org.jetbrains.codeviewer.ui.common.Fonts
-import org.jetbrains.codeviewer.ui.common.Settings
+import com.supcoder.devkit.theme.Fonts
 import org.jetbrains.codeviewer.util.loadableScoped
 import org.jetbrains.codeviewer.util.withoutWidthConstraints
 import kotlin.text.Regex.Companion.fromLiteral

@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import devkit.shared.generated.resources.Res
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -26,8 +27,8 @@ import kotlin.math.roundToInt
 fun LottieAnimation(scope: CoroutineScope, path: String, modifier: Modifier = Modifier) {
     var animation by remember { mutableStateOf<Animation?>(null) }
     scope.launch {
-//        val json = Res.readBytes(path).decodeToString()
-//        animation = Animation.makeFromString(json)
+        val json = Res.readBytes(path).decodeToString()
+        animation = Animation.makeFromString(json)
     }
     animation?.let { InfiniteAnimation(it, modifier.fillMaxSize()) }
 }

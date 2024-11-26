@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupPositionProvider
 import com.supcoder.devkit.file.FileSelectorType
 import com.supcoder.devkit.model.ThemeConfig
+import com.supcoder.devkit.util.LottieAnimation
 import com.supcoder.devkit.util.checkFile
 import com.supcoder.devkit.util.toFileExtensions
 import com.supcoder.devkit.vm.MainViewModel
@@ -304,7 +305,7 @@ fun UploadAnimate(dragging: Boolean, scope: CoroutineScope) {
                 containerColor = MaterialTheme.colorScheme.background,
             )
         ) {
-//            LottieAnimation(scope, "files/upload.json")
+            LottieAnimation(scope, "files/upload.json")
         }
     }
 }
@@ -329,11 +330,11 @@ fun LoadingAnimate(visible: Boolean, viewModel: MainViewModel, scope: CoroutineS
                 ThemeConfig.DARK -> true
                 ThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
             }
-//            if (useDarkTheme) {
-//                LottieAnimation(scope, "files/lottie_loading_light.json")
-//            } else {
-//                LottieAnimation(scope, "files/lottie_loading_dark.json")
-//            }
+            if (useDarkTheme) {
+                LottieAnimation(scope, "files/lottie_loading_light.json")
+            } else {
+                LottieAnimation(scope, "files/lottie_loading_dark.json")
+            }
         }
     }
 }
