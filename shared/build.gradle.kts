@@ -1,20 +1,20 @@
-
 plugins {
-
     id("org.jetbrains.compose")
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.compose.compiler)
 }
 
-
-dependencies {
-}
-
 kotlin {
-    jvm()
+    jvm("desktop")
+
     sourceSets {
-        @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+        all {
+            languageSettings {
+                optIn("org.jetbrains.compose.resources.ExperimentalResourceApi")
+            }
+        }
+
         commonMain {
             dependencies {
                 implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
@@ -63,11 +63,15 @@ kotlin {
                 implementation(libs.javaparser.core)
                 // xml文件解析
                 implementation(libs.dom4j)
+
+                implementation(compose.desktop.currentOs)
             }
         }
-        jvmMain {
-            dependencies{
-                implementation(compose.desktop.currentOs)
+
+        val desktopMain by getting {
+            kotlin.srcDirs("src/jvmMain/kotlin")
+            dependencies {
+                implementation(compose.desktop.common)
             }
         }
         commonTest {
@@ -80,11 +84,9 @@ kotlin {
 
 }
 
+//https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-resources-usage.html
 compose.resources {
     publicResClass = true
 }
 
-kotlin.sourceSets.all {
-    languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
-}
 

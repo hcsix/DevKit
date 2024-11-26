@@ -1,4 +1,4 @@
-rootProject.name = "ApkSignerKit"
+rootProject.name = "DevKit"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-include("compose-desktop")
+include("desktopApp")
 include("shared")
