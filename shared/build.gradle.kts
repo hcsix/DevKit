@@ -1,11 +1,15 @@
 plugins {
-    id("org.jetbrains.compose")
+    alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
+
+    androidTarget()
+
     jvm("desktop")
 
     sourceSets {
@@ -82,6 +86,22 @@ kotlin {
 
     }
 
+}
+
+android {
+    compileSdk = 35
+    namespace = "com.supcoder.devkit.common"
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    defaultConfig {
+        minSdk = 26
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 //https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-resources-usage.html
