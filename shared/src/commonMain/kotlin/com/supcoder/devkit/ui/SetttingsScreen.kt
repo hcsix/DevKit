@@ -63,10 +63,6 @@ fun SettingsScreen(viewModel: MainViewModel) {
                 Spacer(Modifier.size(16.dp))
                 KeyStore(viewModel)
             }
-            item {
-                Spacer(Modifier.size(16.dp))
-                About()
-            }
         }
     }
 }
@@ -90,7 +86,8 @@ private fun ApkSignatureSetUp(
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(Modifier.size(20.dp))
-            StringInput(value = signerSuffix,
+            StringInput(
+                value = signerSuffix,
                 label = "签名后缀",
                 isError = userData.defaultSignerSuffix.isBlank(),
                 onValueChange = { suffix ->
@@ -117,7 +114,8 @@ private fun ApkSignatureSetUp(
                         )
                     }
                 }
-                Switch(checked = userData.duplicateFileRemoval,
+                Switch(
+                    checked = userData.duplicateFileRemoval,
                     onCheckedChange = { viewModel.saveUserData(userData.copy(duplicateFileRemoval = it)) })
             }
             Row(
@@ -134,7 +132,8 @@ private fun ApkSignatureSetUp(
                         )
                     }
                 }
-                Switch(checked = userData.alignFileSize,
+                Switch(
+                    checked = userData.alignFileSize,
                     onCheckedChange = { viewModel.saveUserData(userData.copy(alignFileSize = it)) })
             }
         }
@@ -268,7 +267,8 @@ private fun Conventional(
                 ) {
                     val modeList = listOf(ThemeConfig.FOLLOW_SYSTEM, ThemeConfig.LIGHT, ThemeConfig.DARK)
                     modeList.forEach { theme ->
-                        ElevatedFilterChip(modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                        ElevatedFilterChip(
+                            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                             selected = themeConfig == theme,
                             onClick = { viewModel.saveThemeConfig(theme) },
                             label = {
@@ -296,91 +296,3 @@ private fun Conventional(
     }
 }
 
-@Composable
-private fun About() {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 8.dp)) {
-            Spacer(Modifier.size(4.dp))
-            Text(
-                "关于",
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(Modifier.size(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("应用名称", style = MaterialTheme.typography.bodyLarge)
-//                Text(BuildConfig.APP_NAME, style = MaterialTheme.typography.bodyMedium)
-            }
-            Spacer(Modifier.size(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("应用版本", style = MaterialTheme.typography.bodyLarge)
-//                Text(BuildConfig.APP_VERSION, style = MaterialTheme.typography.bodyMedium)
-            }
-            Spacer(Modifier.size(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("应用描述", style = MaterialTheme.typography.bodyLarge)
-//                Text(BuildConfig.APP_DESCRIPTION, style = MaterialTheme.typography.bodyMedium)
-            }
-            Spacer(Modifier.size(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("应用版权", style = MaterialTheme.typography.bodyLarge)
-//                Text(BuildConfig.APP_COPYRIGHT, style = MaterialTheme.typography.bodyMedium)
-            }
-            Spacer(Modifier.size(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("应用作者", style = MaterialTheme.typography.bodyLarge)
-//                Text(BuildConfig.APP_VENDOR, style = MaterialTheme.typography.bodyMedium)
-            }
-            Spacer(Modifier.size(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("开源协议", style = MaterialTheme.typography.bodyLarge)
-//                Text(BuildConfig.APP_LICENSE, style = MaterialTheme.typography.bodyMedium)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 16.dp, top = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    onClick = {
-//                        Desktop.getDesktop().browse(BuildConfig.APP_GITHUB_URI)
-                              },
-                ) {
-                    Text("GitHub")
-                }
-                Button(
-                    onClick = {
-//                        Desktop.getDesktop().browse(BuildConfig.AUTHOR_GITHUB_URI)
-                              },
-                ) {
-                    Text("Author")
-                }
-                Button(
-                    onClick = {
-//                        Desktop.getDesktop().browse(BuildConfig.APP_LICENSE_URI)
-                              },
-                ) {
-                    Text("License")
-                }
-            }
-        }
-    }
-}

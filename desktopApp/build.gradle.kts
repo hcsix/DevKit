@@ -13,7 +13,7 @@ kotlin {
         val jvmMain by getting  {
             dependencies {
                 implementation(compose.desktop.currentOs)
-//                implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+                implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
                 implementation(project(":shared"))
             }
         }
