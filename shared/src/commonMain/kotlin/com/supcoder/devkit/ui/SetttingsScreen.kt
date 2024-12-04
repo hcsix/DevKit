@@ -50,7 +50,7 @@ import java.io.File
  */
 @Composable
 fun SettingsScreen(viewModel: MainViewModel) {
-    Box(modifier = Modifier.padding(top = 20.dp, bottom = 20.dp, end = 14.dp)) {
+    Box(modifier = Modifier.padding(start = 14.dp, top = 20.dp, bottom = 20.dp, end = 14.dp)) {
         LazyColumn {
             item {
                 Conventional(viewModel)

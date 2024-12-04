@@ -195,7 +195,10 @@ fun MainContentScreen(viewModel: MainViewModel) {
                 }
             )
             // 导航栏
-            NavigationRail(Modifier.fillMaxHeight().width(animatedWidth).align(Alignment.CenterStart)) {
+            NavigationRail(
+                Modifier.fillMaxHeight().width(animatedWidth).align(Alignment.CenterStart),
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally

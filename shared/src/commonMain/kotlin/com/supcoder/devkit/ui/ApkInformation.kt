@@ -130,7 +130,7 @@ private fun ApkInformationBox(
         visible = uiState is UIState.Success, enter = fadeIn(), exit = fadeOut()
     ) {
         Card(
-            modifier = Modifier.fillMaxSize().padding(top = 20.dp, bottom = 20.dp, end = 14.dp),
+            modifier = Modifier.fillMaxSize().padding(start = 14.dp, top = 20.dp, bottom = 20.dp, end = 14.dp),
             border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline)
         ) {
             Box(

@@ -53,6 +53,7 @@ fun FileTreeView(model: FileTree) = Surface(
     with(LocalDensity.current) {
         Box {
             val scrollState = rememberLazyListState()
+            val horscrollState = rememberLazyListState()
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize().withoutWidthConstraints(),

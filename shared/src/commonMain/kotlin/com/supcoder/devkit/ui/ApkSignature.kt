@@ -120,7 +120,7 @@ private fun SignatureCard(viewModel: MainViewModel) {
     val signatureAlisaPasswordError =
         !viewModel.apkSignatureState.keyStoreAlisaList.isNullOrEmpty() && viewModel.apkSignatureState.keyStoreAlisaPassword.isNotBlank() && !viewModel.verifyAlisaPassword()
     Card(
-        modifier = Modifier.fillMaxSize().padding(top = 20.dp, bottom = 20.dp, end = 14.dp)
+        modifier = Modifier.fillMaxSize().padding(start = 14.dp,top = 20.dp, bottom = 20.dp, end = 14.dp)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally

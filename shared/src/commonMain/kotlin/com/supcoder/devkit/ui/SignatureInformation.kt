@@ -220,7 +220,7 @@ private fun SignatureList(
         visible = uiState is UIState.Success, enter = fadeIn(), exit = fadeOut()
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(top = 6.dp, bottom = 6.dp, end = 14.dp),
+            modifier = Modifier.fillMaxSize().padding(start = 14.dp,top = 6.dp, bottom = 6.dp, end = 14.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
